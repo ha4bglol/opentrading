@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Модерна HTML страница</title>
+    <style>
+        :root {
+            --main-bg-color: #1e1e2f;
+            --accent-color: #ff6f61;
+            --text-color: #ffffff;
+            --font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-family);
+            background-color: var(--main-bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.2);
+            padding: 2rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            position: relative;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        h1 {
+            color: var(--accent-color);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            animation: textGlow 2s infinite alternate;
+        }
+
+        p {
+            font-size: 1.2rem;
+            line-height: 1.5;
+            margin: 1rem 0;
+        }
+
+        .placeholder-text {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 1rem;
+            color: #cccccc;
+            font-style: italic;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .placeholder-text:hover {
+            transform: scale(1.05);
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes textGlow {
+            from {
+                text-shadow: 0 0 10px var(--accent-color), 0 0 20px var(--accent-color);
+            }
+            to {
+                text-shadow: 0 0 20px var(--accent-color), 0 0 30px var(--accent-color);
+            }
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            p {
+                font-size: 1rem;
+            }
+        }
+
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .floating-elements div {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            animation: float 6s infinite ease-in-out;
+            opacity: 0.7;
+        }
+
+        .floating-elements div:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            animation-duration: 5s;
+            animation-delay: 0s;
+        }
+
+        .floating-elements div:nth-child(2) {
+            top: 40%;
+            left: 80%;
+            animation-duration: 7s;
+            animation-delay: 1s;
+        }
+
+        .floating-elements div:nth-child(3) {
+            top: 70%;
+            left: 50%;
+            animation-duration: 4s;
+            animation-delay: 2s;
+        }
+
+        @keyframes float {
+            from {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-30px) scale(1.2);
+            }
+            to {
+                transform: translateY(0) scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <div class="container">
+        <h1>OPENTRADING.US?</h1>
+        <div class="placeholder-text">
+            <!-- Тук можете да добавите вашия текст -->
+            
+OpenTrading.us is a company specializing in providing risk-based crypto signals, and we are excited to announce that we will be launching Alpha 0.7 on January 27, 2025. This is an important milestone for us, and we want to express our sincere gratitude to all our users for their patience and support during the development phase!
+
+With Alpha 0.7, our goal is to lay the foundation for a platform that provides high-quality crypto signals. We are pleased to announce that all features in this version will be completely free until the release of version 1.0. This gives us the opportunity to test our systems, improve our processes, and ensure that the user experience meets the highest standards.
+
+We have several key updates planned to make our platform even more valuable to all users:
+
+Update 0.8: In this stage, we will focus on updating the user interface (UI) of the website to make it more intuitive and user-friendly. Additionally, we will introduce support for Solana (SOL) as an additional cryptocurrency for signals, expanding the range of services we offer.
+Update 0.9: We will implement charts for all cryptocurrencies, allowing users to visualize price movements and trends. Furthermore, we will add a section for current news, keeping users informed about the latest events in the crypto industry.
+Update 1.0: In this version, we will expand the platform by adding support for additional cryptocurrencies that will have signals available. Until then, the signals will be limited to Bitcoin (BTC) and Solana (SOL), but with version 1.0, we will significantly increase the number of available cryptocurrencies.
+Our mission is to build a platform that not only provides reliable information but also makes decision-making in the dynamic world of cryptocurrencies easier.
+
+We look forward to your feedback and are excited to experience this journey together with you! Thank you for being a part of the OpenTrading.us community. 🚀
+        </div>
+    </div>
+</body>
+</html>
