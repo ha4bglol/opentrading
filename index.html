@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>TradeOS Pro</title>
+    <title>OPENTRADING</title>
     <style>
         :root {
             --apple-black: #1D1D1F;
@@ -112,28 +112,41 @@
             color: #FFFFFF;
         }
 
-        /* Подобрени новини */
-        .news-container {
-            height: calc(100vh - 180px);
-            overflow: hidden;
-            position: relative;
-        }
-
-        @media (max-width: 500px) {
-            .news-container {
-                height: calc(100vh - 160px);
-            }
-        }
-
         /* Анимации */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        /* Стилове за Telegram Login Widget контейнера */
+        .tg-login-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+        }
     </style>
 </head>
 <body>
     <div class="page-container">
+        <!-- Секция за Telegram Login -->
+        <section class="content-section" id="login">
+            <div class="ios-card">
+                <h3>Влез с Telegram</h3>
+                <p>Използвай своя Telegram профил за бърза верификация.</p>
+                <div class="tg-login-container">
+                    <!-- Вмъкни Telegram Login Widget -->
+                    <script async src="https://telegram.org/js/telegram-widget.js?7"
+                        data-telegram-login="loginopentradingusBot"
+                        data-size="large"
+                        data-userpic="false"
+                        data-request-access="write"
+                        data-lang="bg"
+                        data-callback="onTelegramAuth">
+                    </script>
+                </div>
+            </div>
+        </section>
+
         <!-- Начална секция -->
         <section class="content-section active" id="home">
             <div class="ios-card">
@@ -155,7 +168,7 @@
             </div>
         </section>
 
-        <!-- Графики -->
+        <!-- Секция за графики -->
         <section class="content-section" id="charts">
             <div class="ios-card">
                 <h3>Цени в реално време 📊</h3>
@@ -184,7 +197,7 @@
             </div>
         </section>
 
-        <!-- Подобрени новини -->
+        <!-- Секция за новини -->
         <section class="content-section" id="news">
             <div class="ios-card">
                 <h3>Пазарни новини 📰</h3>
@@ -208,7 +221,7 @@
             </div>
         </section>
 
-        <!-- Настройки с запаметяване -->
+        <!-- Секция за настройки -->
         <section class="content-section" id="settings">
             <div class="ios-card">
                 <h3>Настройки ⚙️</h3>
@@ -223,16 +236,18 @@
             </div>
         </section>
 
+        <!-- Навигационно меню -->
         <nav class="nav-bar">
             <div class="nav-item active" data-section="home">🏠 Начало</div>
             <div class="nav-item" data-section="charts">📈 Графики</div>
             <div class="nav-item" data-section="news">📰 Новини</div>
             <div class="nav-item" data-section="settings">⚙️ Настройки</div>
+            <div class="nav-item" data-section="login">🔐 Вход</div>
         </nav>
     </div>
 
     <script>
-        // Инициализация на начална страница
+        // Инициализация на начална секция
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('home').classList.add('active');
             document.querySelector('[data-section="home"]').classList.add('active');
@@ -242,8 +257,7 @@
         const nightModeToggle = document.getElementById('nightModeToggle');
         const body = document.body;
 
-        // Зареждане на състояние
-        if(localStorage.getItem('nightMode') === 'true') {
+        if (localStorage.getItem('nightMode') === 'true') {
             body.classList.add('night-mode');
             nightModeToggle.checked = true;
         }
@@ -253,7 +267,7 @@
             localStorage.setItem('nightMode', e.target.checked);
         });
 
-        // Подобрено управление на секциите
+        // Управление на навигационните секции
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('click', function() {
                 const sectionId = this.dataset.section;
@@ -265,16 +279,23 @@
                 this.classList.add('active');
                 document.getElementById(sectionId).classList.add('active');
                 
-                if(navigator.vibrate) navigator.vibrate(3);
+                if (navigator.vibrate) navigator.vibrate(3);
             });
         });
 
-        // Ресайз за графики
-        window.addEventListener('resize', () => {
-            if(document.getElementById('charts').classList.contains('active')) {
-                window.dispatchEvent(new Event('resize'));
-            }
-        });
+        // Callback функция за Telegram Login Widget
+        function onTelegramAuth(user) {
+            console.log("Успешен вход с Telegram:", user);
+            // Тук можеш да изпратиш данните към сървъра за допълнителна верификация или обработка.
+            // Пример:
+            // fetch('/telegram-auth', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify(user)
+            // })
+            // .then(response => response.json())
+            // .then(data => console.log(data));
+        }
     </script>
 </body>
 </html>
