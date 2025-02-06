@@ -378,7 +378,7 @@
     </nav>
   </div>
 
-  <!-- Модал за вход с Telegram (коригиран) -->
+  <!-- Модал за вход с Telegram -->
   <div class="modal" id="loginModal">
     <div class="modal-content">
       <div class="modal-header">
@@ -386,7 +386,7 @@
         <span class="modal-close" onclick="hideModal('loginModal')">×</span>
       </div>
       <div class="tg-login-container">
-        <!-- Заменете 'YOUR_BOT_USERNAME' с истинското потребителско име на вашия Telegram бот -->
+        <!-- Заменете 'loginopentradingusBot' с истинското потребителско име на вашия Telegram бот -->
         <script async src="https://telegram.org/js/telegram-widget.js?7"
           data-telegram-login="loginopentradingusBot"
           data-size="large"
@@ -451,6 +451,9 @@
     let balance = parseInt(localStorage.getItem('balance')) || 0;
     document.getElementById('balance').textContent = `${balance} тикета`;
 
+    // Променлива за потребителя
+    let user = JSON.parse(localStorage.getItem('user')) || null;
+
     // Проверка дали потребителят е логнат преди извършване на действия
     function checkLogin() {
       if (!user) {
@@ -492,8 +495,7 @@
       }
     }
 
-    // Променлива за потребителя и функции за вход/изход с Telegram
-    let user = JSON.parse(localStorage.getItem('user')) || null;
+    // Обновяване на UI-то според статуса на потребителя
     function updateUI() {
       const loggedInfo = document.getElementById('loggedInfo');
       const authSection = document.getElementById('authSection');
@@ -505,10 +507,10 @@
                                     <button onclick="logout()" style="margin-top:8px;">Изход</button>
                                   </div>`;
         authSection.style.display = 'none';
-        // Премахване на модалния прозорец за вход от DOM (ако е наличен)
+        // Можете да скриете или премахнете модалния прозорец за вход, ако желаете
         const loginModal = document.getElementById('loginModal');
         if (loginModal) {
-          loginModal.parentNode.removeChild(loginModal);
+          loginModal.classList.remove('active');
         }
       } else {
         document.getElementById('welcomeMessage').textContent = 'Добре дошли! 👋';
@@ -517,8 +519,8 @@
       }
     }
 
-    // Callback за Telegram Login Widget – извиква се при успешен вход
-    function onTelegramAuth(userData) {
+    // Callback функция за вход с Telegram – дефинирана в глобалния обхват
+    window.onTelegramAuth = function(userData) {
       if (!userData) return;
       
       user = {
@@ -533,7 +535,7 @@
       updateUI();
       hideModal('loginModal');
       showSection('home');
-    }
+    };
 
     function logout() {
       if (confirm("Сигурни ли сте, че искате да излезете?")) {
