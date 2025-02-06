@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>OPENTRADING</title>
   <style>
-    /* CSS стилове – настройте ги по желание */
+    /* Основни стилове */
     :root {
       --apple-black: #1D1D1F;
       --apple-gray: #F5F5F7;
@@ -14,7 +14,6 @@
       --night-bg: #000000;
       --night-card: #1C1C1E;
     }
-    
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell;
       background: var(--apple-gray);
@@ -22,20 +21,19 @@
       -webkit-font-smoothing: antialiased;
       transition: background 0.3s ease;
     }
-    
     body.night-mode {
       background: var(--night-bg);
       color: #FFFFFF;
     }
-    
     .page-container {
       display: grid;
       grid-template-rows: 1fr auto;
       height: 100vh;
       max-width: 800px;
       margin: 0 auto;
+      position: relative;
     }
-    
+    /* Навигационно меню */
     .nav-bar {
       display: flex;
       justify-content: space-around;
@@ -49,12 +47,10 @@
       max-width: 800px;
       z-index: 100;
     }
-    
     body.night-mode .nav-bar {
       background: rgba(28,28,30,0.92);
       border-color: #2C2C2E;
     }
-    
     .nav-item {
       padding: 8px;
       color: #86868B;
@@ -68,13 +64,12 @@
       gap: 4px;
       user-select: none;
     }
-    
     .nav-item.active {
       color: var(--apple-blue);
       background: rgba(0,122,255,0.12);
       transform: translateY(-8px);
     }
-    
+    /* Секции */
     .content-section {
       display: none;
       padding: 1.2rem;
@@ -82,12 +77,10 @@
       margin-bottom: 76px;
       gap: 1.2rem;
     }
-    
     .content-section.active {
       display: grid;
       animation: fadeIn 0.3s ease;
     }
-    
     .ios-card {
       background: white;
       border-radius: 18px;
@@ -95,37 +88,31 @@
       box-shadow: var(--ios-card-shadow);
       transition: all 0.3s ease;
     }
-    
     body.night-mode .ios-card {
       background: var(--night-card);
       color: #FFFFFF;
     }
-    
     .ios-card h3 {
       margin: 0 0 1rem 0;
       font-size: 1.1em;
     }
-    
     .settings-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 12px 0;
     }
-    
     .reward-card {
       display: flex;
       flex-direction: column;
       gap: 8px;
       margin: 10px 0;
     }
-    
     .promo-input {
       display: flex;
       gap: 8px;
       margin-top: 12px;
     }
-    
     input[type="text"] {
       flex: 1;
       padding: 8px 12px;
@@ -133,7 +120,6 @@
       border: 1px solid #E5E5EA;
       font-size: 16px;
     }
-    
     button {
       background: var(--apple-blue);
       color: white;
@@ -143,12 +129,10 @@
       cursor: pointer;
       font-size: 0.9em;
     }
-    
     .chart-container, .news-container {
       height: 400px;
       margin: 1rem 0;
     }
-    
     /* Стилове за превключвател (switch) */
     .switch {
       position: relative;
@@ -156,13 +140,11 @@
       width: 50px;
       height: 24px;
     }
-    
     .switch input {
       opacity: 0;
       width: 0;
       height: 0;
     }
-    
     .slider {
       position: absolute;
       cursor: pointer;
@@ -174,7 +156,6 @@
       transition: .4s;
       border-radius: 24px;
     }
-    
     .slider:before {
       position: absolute;
       content: "";
@@ -186,15 +167,12 @@
       transition: .4s;
       border-radius: 50%;
     }
-    
     input:checked + .slider {
       background-color: var(--apple-blue);
     }
-    
     input:checked + .slider:before {
       transform: translateX(26px);
     }
-    
     /* Модални стилове */
     .modal {
       display: none;
@@ -208,11 +186,9 @@
       align-items: center;
       z-index: 1000;
     }
-    
     .modal.active {
       display: flex;
     }
-    
     .modal-content {
       background: white;
       border-radius: 18px;
@@ -221,28 +197,23 @@
       max-width: 400px;
       box-shadow: var(--ios-card-shadow);
     }
-    
     body.night-mode .modal-content {
       background: var(--night-card);
       color: #FFFFFF;
     }
-    
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 1rem;
     }
-    
     .modal-header h3 {
       margin: 0;
     }
-    
     .modal-close {
       cursor: pointer;
       font-size: 1.2em;
     }
-    
     .logged-message {
       background: rgba(0,122,255,0.12);
       padding: 8px 12px;
@@ -251,14 +222,57 @@
       text-align: center;
       font-weight: bold;
     }
-    
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    /* Overlay за задължителен вход */
+    #loginOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 2000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #loginOverlay .overlay-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+    }
+    #loginOverlay h2 {
+      margin-top: 0;
+    }
   </style>
+  <!-- Дефиниция на глобалната callback функция за Telegram -->
+  <script>
+    // Функцията трябва да е дефинирана преди Telegram widget-а да се зареди
+    window.onTelegramAuth = function(userData) {
+      if (!userData) return;
+      const user = {
+        id: userData.id,
+        first_name: userData.first_name,
+        last_name: userData.last_name || '',
+        username: userData.username || '',
+        photo_url: userData.photo_url || ''
+      };
+      localStorage.setItem('user', JSON.stringify(user));
+      updateUI();
+      hideModal('loginModal');
+      removeLoginOverlay();
+      showSection('home');
+    };
+  </script>
 </head>
 <body>
+  <!-- Основният контейнер на страницата -->
   <div class="page-container">
     <!-- Начална секция -->
     <section class="content-section active" id="home">
@@ -352,7 +366,7 @@
     <section class="content-section" id="settings">
       <div class="ios-card">
         <h3>⚙️ Настройки</h3>
-        <!-- Секция за информация за логнат потребител -->
+        <!-- Информация за логнат потребител -->
         <div id="loggedInfo"></div>
         <div class="settings-item">
           <span>Нощен режим</span>
@@ -361,7 +375,7 @@
             <span class="slider"></span>
           </label>
         </div>
-        <!-- Ако потребителят не е логнат, показваме бутон за вход -->
+        <!-- Бутон за вход, ако потребителят не е логнат (ще бъде скрит от overlay) -->
         <div id="authSection" class="tg-login-container" style="margin-top: 12px;">
           <button onclick="showModal('loginModal')">🔐 Вход с Telegram</button>
         </div>
@@ -377,7 +391,7 @@
     </nav>
   </div>
 
-  <!-- Модал за вход с Telegram -->
+  <!-- Модален прозорец за вход с Telegram (може да се използва и в overlay, ако се нуждаете от допълнителна опция) -->
   <div class="modal" id="loginModal">
     <div class="modal-content">
       <div class="modal-header">
@@ -398,7 +412,7 @@
     </div>
   </div>
 
-  <!-- Модал за промо код -->
+  <!-- Модален прозорец за промо код -->
   <div class="modal" id="promoModal">
     <div class="modal-content">
       <div class="modal-header">
@@ -412,8 +426,17 @@
     </div>
   </div>
 
-  <!-- Скриптов блокове – поставете ги след съдържанието, за да сте сигурни, че DOM е готов -->
+  <!-- Overlay, който принуждава потребителя да влезе -->
+  <div id="loginOverlay">
+    <div class="overlay-content">
+      <h2>Моля, влезте в системата</h2>
+      <p>За да използвате сайта, трябва да влезете чрез Telegram.</p>
+      <!-- Тук може да се вмъкне също Telegram widget-а или бутон, който отваря модалния прозорец -->
+      <button onclick="showModal('loginModal')">Вход с Telegram</button>
+    </div>
+  </div>
 
+  <!-- Скриптове -->
   <script>
     // Навигация между секциите
     document.querySelectorAll('.nav-item').forEach(item => {
@@ -440,11 +463,11 @@
       localStorage.setItem('nightMode', e.target.checked);
     });
 
-    // Балансът
+    // Баланс
     let balance = parseInt(localStorage.getItem('balance')) || 0;
     document.getElementById('balance').textContent = `${balance} тикета`;
 
-    // Проверка дали потребителят е логнат
+    // Проверка за логнат потребител
     function checkLogin() {
       if (!localStorage.getItem('user')) {
         alert("Моля, влезте в системата, за да използвате тази функция.");
@@ -487,8 +510,7 @@
   </script>
 
   <script>
-    // Функции, които обновяват интерфейса, скриват модали и управляват изхода
-
+    // Функции за управление на UI, модали и изход
     function updateUI() {
       const loggedInfo = document.getElementById('loggedInfo');
       const authSection = document.getElementById('authSection');
@@ -527,28 +549,33 @@
       if (confirm("Сигурни ли сте, че искате да излезете?")) {
         localStorage.removeItem('user');
         updateUI();
+        showLoginOverlay();
       }
     }
 
-    // Callback функция за вход чрез Telegram – дефинирана глобално
-    window.onTelegramAuth = function(userData) {
-      if (!userData) return;
-      const user = {
-        id: userData.id,
-        first_name: userData.first_name,
-        last_name: userData.last_name || '',
-        username: userData.username || '',
-        photo_url: userData.photo_url || ''
-      };
-      localStorage.setItem('user', JSON.stringify(user));
-      updateUI();
-      hideModal('loginModal');
-      showSection('home');
-    };
+    // Премахване на loginOverlay след успешен вход
+    function removeLoginOverlay() {
+      const overlay = document.getElementById('loginOverlay');
+      if (overlay) {
+        overlay.style.display = 'none';
+      }
+    }
+    // Показване на loginOverlay ако потребителят не е логнат
+    function showLoginOverlay() {
+      const overlay = document.getElementById('loginOverlay');
+      if (overlay) {
+        overlay.style.display = 'flex';
+      }
+    }
 
     // Обновяване на интерфейса при зареждане на страницата
     document.addEventListener('DOMContentLoaded', function() {
       updateUI();
+      if (!localStorage.getItem('user')) {
+        showLoginOverlay();
+      } else {
+        removeLoginOverlay();
+      }
       if (localStorage.getItem('nightMode') === 'true') {
         document.body.classList.add('night-mode');
         document.getElementById('nightModeToggle').checked = true;
