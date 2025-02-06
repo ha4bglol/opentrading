@@ -1,465 +1,516 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>OPENTRADING</title>
-    <style>
-        :root {
-            --apple-black: #1D1D1F;
-            --apple-gray: #F5F5F7;
-            --apple-blue: #007AFF;
-            --ios-card-shadow: 0 4px 12px rgba(0,0,0,0.04);
-            --night-bg: #000000;
-            --night-card: #1C1C1E;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>OPENTRADING</title>
+  <style>
+    :root {
+      --apple-black: #1D1D1F;
+      --apple-gray: #F5F5F7;
+      --apple-blue: #007AFF;
+      --ios-card-shadow: 0 4px 12px rgba(0,0,0,0.04);
+      --night-bg: #000000;
+      --night-card: #1C1C1E;
+    }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell;
-            background: var(--apple-gray);
-            margin: 0;
-            -webkit-font-smoothing: antialiased;
-            transition: background 0.3s ease;
-        }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell;
+      background: var(--apple-gray);
+      margin: 0;
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.3s ease;
+    }
 
-        body.night-mode {
-            background: var(--night-bg);
-            color: #FFFFFF;
-        }
+    body.night-mode {
+      background: var(--night-bg);
+      color: #FFFFFF;
+    }
 
-        .page-container {
-            display: grid;
-            grid-template-rows: 1fr auto;
-            height: 100vh;
-            max-width: 800px;
-            margin: 0 auto;
-        }
+    .page-container {
+      display: grid;
+      grid-template-rows: 1fr auto;
+      height: 100vh;
+      max-width: 800px;
+      margin: 0 auto;
+    }
 
-        .nav-bar {
-            display: flex;
-            justify-content: space-around;
-            padding: 12px 0;
-            background: rgba(255,255,255,0.92);
-            backdrop-filter: blur(40px);
-            border-top: 1px solid #E5E5EA;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            max-width: 800px;
-            z-index: 100;
-        }
+    .nav-bar {
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(40px);
+      border-top: 1px solid #E5E5EA;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 800px;
+      z-index: 100;
+    }
 
-        .night-mode .nav-bar {
-            background: rgba(28,28,30,0.92);
-            border-color: #2C2C2E;
-        }
+    body.night-mode .nav-bar {
+      background: rgba(28,28,30,0.92);
+      border-color: #2C2C2E;
+    }
 
-        .nav-item {
-            padding: 8px;
-            color: #86868B;
-            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
-            cursor: pointer;
-            border-radius: 14px;
-            font-size: 0.8em;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            user-select: none;
-        }
+    .nav-item {
+      padding: 8px;
+      color: #86868B;
+      transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+      cursor: pointer;
+      border-radius: 14px;
+      font-size: 0.8em;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      user-select: none;
+    }
 
-        .nav-item.active {
-            color: var(--apple-blue);
-            background: rgba(0,122,255,0.12);
-            transform: translateY(-8px);
-        }
+    .nav-item.active {
+      color: var(--apple-blue);
+      background: rgba(0,122,255,0.12);
+      transform: translateY(-8px);
+    }
 
-        .content-section {
-            display: none;
-            padding: 1.2rem;
-            overflow-y: auto;
-            margin-bottom: 76px;
-            gap: 1.2rem;
-        }
+    .content-section {
+      display: none;
+      padding: 1.2rem;
+      overflow-y: auto;
+      margin-bottom: 76px;
+      gap: 1.2rem;
+    }
 
-        .content-section.active {
-            display: grid;
-            animation: fadeIn 0.3s ease;
-        }
+    .content-section.active {
+      display: grid;
+      animation: fadeIn 0.3s ease;
+    }
 
-        .ios-card {
-            background: white;
-            border-radius: 18px;
-            padding: 1.4rem;
-            box-shadow: var(--ios-card-shadow);
-            transition: all 0.3s ease;
-        }
+    .ios-card {
+      background: white;
+      border-radius: 18px;
+      padding: 1.4rem;
+      box-shadow: var(--ios-card-shadow);
+      transition: all 0.3s ease;
+    }
 
-        .night-mode .ios-card {
-            background: var(--night-card);
-            color: #FFFFFF;
-        }
+    body.night-mode .ios-card {
+      background: var(--night-card);
+      color: #FFFFFF;
+    }
 
-        .ios-card h3 {
-            margin: 0 0 1rem 0;
-            font-size: 1.1em;
-        }
+    .ios-card h3 {
+      margin: 0 0 1rem 0;
+      font-size: 1.1em;
+    }
 
-        .settings-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-        }
+    .settings-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+    }
 
-        .reward-card {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin: 10px 0;
-        }
+    .reward-card {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 10px 0;
+    }
 
-        .promo-input {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px;
-        }
+    .promo-input {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
 
-        input[type="text"] {
-            flex: 1;
-            padding: 8px 12px;
-            border-radius: 10px;
-            border: 1px solid #E5E5EA;
-            font-size: 16px;
-        }
+    input[type="text"] {
+      flex: 1;
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid #E5E5EA;
+      font-size: 16px;
+    }
 
-        button {
-            background: var(--apple-blue);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 0.9em;
-        }
+    button {
+      background: var(--apple-blue);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.9em;
+    }
 
-        .chart-container {
-            height: 300px;
-            margin: 1rem 0;
-        }
+    .chart-container, .news-container {
+      height: 400px;
+      margin: 1rem 0;
+    }
 
-        /* Модални стилове */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
+    /* Стилове за превключвател (switch) */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
 
-        .modal.active {
-            display: flex;
-        }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
 
-        .modal-content {
-            background: white;
-            border-radius: 18px;
-            padding: 1.4rem;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: var(--ios-card-shadow);
-        }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 24px;
+    }
 
-        .night-mode .modal-content {
-            background: var(--night-card);
-            color: #FFFFFF;
-        }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
 
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
+    input:checked + .slider {
+      background-color: var(--apple-blue);
+    }
 
-        .modal-header h3 {
-            margin: 0;
-        }
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
 
-        .modal-close {
-            cursor: pointer;
-            font-size: 1.2em;
-        }
+    /* Модални стилове */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
 
-        /* Стилове за новини */
-        .news-container {
-            height: 400px;
-            overflow-y: auto;
-        }
+    .modal.active {
+      display: flex;
+    }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+    .modal-content {
+      background: white;
+      border-radius: 18px;
+      padding: 1.4rem;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: var(--ios-card-shadow);
+    }
+
+    body.night-mode .modal-content {
+      background: var(--night-card);
+      color: #FFFFFF;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+    }
+
+    .modal-close {
+      cursor: pointer;
+      font-size: 1.2em;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body>
-    <div class="page-container">
-        <!-- Начална секция -->
-        <section class="content-section active" id="home">
-            <div class="ios-card">
-                <h3 id="welcomeMessage">Добре дошли! 👋</h3>
-                <p>Вашият баланс: <strong id="balance">0 тикета</strong></p>
-                <div class="reward-card">
-                    <button onclick="showSection('rewards')">🎁 Награди</button>
-                    <button onclick="showModal('promoModal')">🎫 Промо код</button>
-                </div>
-            </div>
-            
-            <div class="ios-card">
-                <h3>Бърз достъп ⚡</h3>
-                <div class="settings-item">
-                    <span>Търговия с крипто</span>
-                    <span>➔</span>
-                </div>
-                <div class="settings-item">
-                    <span>Портфейл анализ</span>
-                    <span>➔</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- Секция за награди -->
-        <section class="content-section" id="rewards">
-            <div class="ios-card">
-                <h3>🎁 Дневни награди</h3>
-                <div class="reward-card">
-                    <div class="settings-item">
-                        <span>Ден 1: 10 тикета</span>
-                        <button onclick="claimReward(10)">Вземи</button>
-                    </div>
-                    <!-- Добавете още награди -->
-                </div>
-            </div>
-        </section>
-
-        <!-- Секция за графики -->
-        <section class="content-section" id="charts">
-            <div class="ios-card">
-                <h3>Цени в реално време 📊</h3>
-                <div class="chart-container">
-                    <div class="tradingview-widget-container">
-                        <div class="tradingview-widget-container__widget"></div>
-                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
-                        {
-                            "autosize": true,
-                            "symbol": "NASDAQ:AAPL",
-                            "interval": "D",
-                            "timezone": "Etc/UTC",
-                            "theme": "light",
-                            "style": "1",
-                            "locale": "en",
-                            "allow_symbol_change": true,
-                            "hide_side_toolbar": false,
-                            "hidevolume": true,
-                            "withdateranges": true,
-                            "studies": [],
-                            "support_host": "https://www.tradingview.com"
-                        }
-                        </script>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Секция за настройки -->
-        <section class="content-section" id="settings">
-            <div class="ios-card">
-                <h3>⚙️ Настройки</h3>
-                <div class="settings-item">
-                    <span>Нощен режим</span>
-                    <label class="switch">
-                        <input type="checkbox" id="nightModeToggle">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                <div id="authSection" class="tg-login-container">
-                    <button onclick="showModal('loginModal')">🔐 Вход с Telegram</button>
-                </div>
-                <div id="userSection" style="display: none;">
-                    <button onclick="logout()">🔒 Изход</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Навигационно меню -->
-        <nav class="nav-bar">
-            <div class="nav-item active" data-section="home">🏠 Начало</div>
-            <div class="nav-item" data-section="charts">📈 Графики</div>
-            <div class="nav-item" data-section="news">📰 Новини</div>
-            <div class="nav-item" data-section="settings">⚙️ Настройки</div>
-        </nav>
-    </div>
-
-    <!-- Модал за вход -->
-    <div class="modal" id="loginModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Вход с Telegram</h3>
-                <span class="modal-close" onclick="hideModal('loginModal')">×</span>
-            </div>
-            <div class="tg-login-container">
-                <script async src="https://telegram.org/js/telegram-widget.js?7"
-                    data-telegram-login="loginopentradingusBot"
-                    data-size="large"
-                    data-userpic="false"
-                    data-request-access="write"
-                    data-lang="bg"
-                    data-callback="onTelegramAuth">
-                </script>
-            </div>
+  <div class="page-container">
+    <!-- Начална секция -->
+    <section class="content-section active" id="home">
+      <div class="ios-card">
+        <h3 id="welcomeMessage">Добре дошли! 👋</h3>
+        <p>Вашият баланс: <strong id="balance">0 тикета</strong></p>
+        <div class="reward-card">
+          <button onclick="showSection('rewards')">🎁 Награди</button>
+          <button onclick="showModal('promoModal')">🎫 Промо код</button>
         </div>
-    </div>
+      </div>
 
-    <!-- Модал за промо код -->
-    <div class="modal" id="promoModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>🎫 Активирай промо код</h3>
-                <span class="modal-close" onclick="hideModal('promoModal')">×</span>
-            </div>
-            <div class="promo-input">
-                <input type="text" id="promoCode" placeholder="Въведете промо код">
-                <button onclick="activatePromo()">Активирай</button>
-            </div>
+      <div class="ios-card">
+        <h3>Бърз достъп ⚡</h3>
+        <div class="settings-item">
+          <span>Търговия с крипто</span>
+          <span>➔</span>
         </div>
-    </div>
-
-    <!-- Модал за новини -->
-    <div class="modal" id="newsModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>📰 Пазарни новини</h3>
-                <span class="modal-close" onclick="hideModal('newsModal')">×</span>
-            </div>
-            <div class="news-container">
-                <div class="tradingview-widget-container">
-                    <div class="tradingview-widget-container__widget"></div>
-                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js" async>
-                    {
-                        "feedMode": "all_symbols",
-                        "isTransparent": false,
-                        "displayMode": "regular",
-                        "width": "100%",
-                        "height": "100%",
-                        "colorTheme": "light",
-                        "locale": "bg",
-                        "hideUtilityBar": false
-                    }
-                    </script>
-                </div>
-            </div>
+        <div class="settings-item">
+          <span>Портфейл анализ</span>
+          <span>➔</span>
         </div>
-    </div>
+      </div>
+    </section>
 
-    <script>
-        // Логика за менютата
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', function() {
-                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-                this.classList.add('active');
-                const sectionId = this.dataset.section;
-                document.querySelectorAll('.content-section').forEach(section => {
-                    section.classList.remove('active');
-                });
-                document.getElementById(sectionId).classList.add('active');
-            });
-        });
+    <!-- Секция за награди -->
+    <section class="content-section" id="rewards">
+      <div class="ios-card">
+        <h3>🎁 Дневни награди</h3>
+        <div class="reward-card">
+          <div class="settings-item">
+            <span>Ден 1: 10 тикета</span>
+            <button onclick="claimReward(10)">Вземи</button>
+          </div>
+          <!-- Добавете още награди при необходимост -->
+        </div>
+      </div>
+    </section>
 
-        // Логика за нощен режим
-        const nightModeToggle = document.getElementById('nightModeToggle');
-        const body = document.body;
-
-        if (localStorage.getItem('nightMode') === 'true') {
-            body.classList.add('night-mode');
-            nightModeToggle.checked = true;
-        }
-
-        nightModeToggle.addEventListener('change', (e) => {
-            body.classList.toggle('night-mode');
-            localStorage.setItem('nightMode', e.target.checked);
-        });
-
-        // Логика за модали
-        function showModal(modalId) {
-            document.getElementById(modalId).classList.add('active');
-        }
-
-        function hideModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-        }
-
-        // Логика за тикети
-        let balance = parseInt(localStorage.getItem('balance')) || 0;
-        document.getElementById('balance').textContent = `${balance} тикета`;
-
-        function claimReward(amount) {
-            balance += amount;
-            localStorage.setItem('balance', balance);
-            document.getElementById('balance').textContent = `${balance} тикета`;
-            alert(`Получихте ${amount} тикета!`);
-        }
-
-        function activatePromo() {
-            const promoCode = document.getElementById('promoCode').value;
-            if (promoCode === "TRADEOS") {
-                claimReward(50);
-                hideModal('promoModal');
-            } else {
-                alert("Невалиден промо код!");
+    <!-- Секция за графики -->
+    <section class="content-section" id="charts">
+      <div class="ios-card">
+        <h3>Цени в реално време 📊</h3>
+        <div class="chart-container">
+          <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+            {
+              "autosize": true,
+              "symbol": "NASDAQ:AAPL",
+              "interval": "D",
+              "timezone": "Etc/UTC",
+              "theme": "light",
+              "style": "1",
+              "locale": "bg",
+              "allow_symbol_change": true,
+              "hide_side_toolbar": false,
+              "hidevolume": true,
+              "withdateranges": true,
+              "studies": [],
+              "support_host": "https://www.tradingview.com"
             }
-        }
+            </script>
+          </div>
+        </div>
+      </div>
+    </section>
 
-        // Логика за Telegram вход/изход
-        let user = null;
-        
-        function updateUI() {
-            if(user) {
-                document.getElementById('welcomeMessage').textContent = `Здравейте, ${user.first_name}! 👋`;
-                document.getElementById('authSection').style.display = 'none';
-                document.getElementById('userSection').style.display = 'block';
-            } else {
-                document.getElementById('welcomeMessage').textContent = 'Добре дошли! 👋';
-                document.getElementById('authSection').style.display = 'block';
-                document.getElementById('userSection').style.display = 'none';
+    <!-- Секция за новини -->
+    <section class="content-section" id="news">
+      <div class="ios-card">
+        <h3>📰 Новини</h3>
+        <div class="news-container">
+          <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js" async>
+            {
+              "feedMode": "all_symbols",
+              "colorTheme": "light",
+              "isTransparent": false,
+              "displayMode": "regular",
+              "width": "100%",
+              "height": "400",
+              "locale": "bg"
             }
-        }
+            </script>
+          </div>
+        </div>
+      </div>
+    </section>
 
-        function onTelegramAuth(userData) {
-            user = userData;
-            localStorage.setItem('user', JSON.stringify(user));
-            updateUI();
-            hideModal('loginModal');
-            showSection('home');
-        }
+    <!-- Секция за настройки -->
+    <section class="content-section" id="settings">
+      <div class="ios-card">
+        <h3>⚙️ Настройки</h3>
+        <div class="settings-item">
+          <span>Нощен режим</span>
+          <label class="switch">
+            <input type="checkbox" id="nightModeToggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div id="authSection" class="tg-login-container">
+          <button onclick="showModal('loginModal')">🔐 Вход с Telegram</button>
+        </div>
+        <div id="userSection" style="display: none;">
+          <button onclick="logout()">🔒 Изход</button>
+        </div>
+      </div>
+    </section>
 
-        function logout() {
-            user = null;
-            localStorage.removeItem('user');
-            updateUI();
-        }
+    <!-- Навигационно меню -->
+    <nav class="nav-bar">
+      <div class="nav-item active" data-section="home">🏠 Начало</div>
+      <div class="nav-item" data-section="charts">📈 Графики</div>
+      <div class="nav-item" data-section="news">📰 Новини</div>
+      <div class="nav-item" data-section="settings">⚙️ Настройки</div>
+    </nav>
+  </div>
 
-        // Инициализация
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedUser = localStorage.getItem('user');
-            if(savedUser) user = JSON.parse(savedUser);
-            updateUI();
+  <!-- Модал за вход с Telegram -->
+  <div class="modal" id="loginModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Вход с Telegram</h3>
+        <span class="modal-close" onclick="hideModal('loginModal')">×</span>
+      </div>
+      <div class="tg-login-container">
+        <script async src="https://telegram.org/js/telegram-widget.js?7"
+          data-telegram-login="loginopentradingusBot"
+          data-size="large"
+          data-userpic="false"
+          data-request-access="write"
+          data-lang="bg"
+          data-callback="onTelegramAuth">
+        </script>
+      </div>
+    </div>
+  </div>
+
+  <!-- Модал за промо код -->
+  <div class="modal" id="promoModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>🎫 Активирай промо код</h3>
+        <span class="modal-close" onclick="hideModal('promoModal')">×</span>
+      </div>
+      <div class="promo-input">
+        <input type="text" id="promoCode" placeholder="Въведете промо код">
+        <button onclick="activatePromo()">Активирай</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Логика за навигационните менюта
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', function() {
+        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+        this.classList.add('active');
+        const sectionId = this.dataset.section;
+        document.querySelectorAll('.content-section').forEach(section => {
+          section.classList.remove('active');
         });
-    </script>
+        document.getElementById(sectionId).classList.add('active');
+      });
+    });
+
+    // Логика за нощен режим
+    const nightModeToggle = document.getElementById('nightModeToggle');
+    const body = document.body;
+
+    if (localStorage.getItem('nightMode') === 'true') {
+      body.classList.add('night-mode');
+      nightModeToggle.checked = true;
+    }
+
+    nightModeToggle.addEventListener('change', (e) => {
+      body.classList.toggle('night-mode');
+      localStorage.setItem('nightMode', e.target.checked);
+    });
+
+    // Функции за модални прозорци
+    function showModal(modalId) {
+      document.getElementById(modalId).classList.add('active');
+    }
+
+    function hideModal(modalId) {
+      document.getElementById(modalId).classList.remove('active');
+    }
+
+    // Логика за управление на баланса (тикети)
+    let balance = parseInt(localStorage.getItem('balance')) || 0;
+    document.getElementById('balance').textContent = `${balance} тикета`;
+
+    function claimReward(amount) {
+      balance += amount;
+      localStorage.setItem('balance', balance);
+      document.getElementById('balance').textContent = `${balance} тикета`;
+      alert(`Получихте ${amount} тикета!`);
+    }
+
+    function activatePromo() {
+      const promoCode = document.getElementById('promoCode').value.trim();
+      if (promoCode === "TRADEOS") {
+        claimReward(50);
+        hideModal('promoModal');
+      } else {
+        alert("Невалиден промо код!");
+      }
+    }
+
+    // Логика за Telegram вход/изход
+    let user = null;
+
+    function updateUI() {
+      if (user) {
+        document.getElementById('welcomeMessage').textContent = `Здравейте, ${user.first_name}! 👋`;
+        document.getElementById('authSection').style.display = 'none';
+        document.getElementById('userSection').style.display = 'block';
+      } else {
+        document.getElementById('welcomeMessage').textContent = 'Добре дошли! 👋';
+        document.getElementById('authSection').style.display = 'block';
+        document.getElementById('userSection').style.display = 'none';
+      }
+    }
+
+    // Callback функция за Telegram Login Widget
+    function onTelegramAuth(userData) {
+      if (userData) {
+        user = userData;
+        localStorage.setItem('user', JSON.stringify(user));
+        updateUI();
+        hideModal('loginModal');
+        showSection('home');
+      } else {
+        alert('Грешка при вход. Моля, опитайте отново.');
+      }
+    }
+
+    function logout() {
+      user = null;
+      localStorage.removeItem('user');
+      updateUI();
+    }
+
+    function showSection(sectionId) {
+      // Превключване към дадена секция
+      document.querySelectorAll('.nav-item').forEach(nav => {
+        nav.classList.toggle('active', nav.dataset.section === sectionId);
+      });
+      document.querySelectorAll('.content-section').forEach(section => {
+        section.classList.toggle('active', section.id === sectionId);
+      });
+    }
+
+    // Инициализация при зареждане на документа
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedUser = localStorage.getItem('user');
+      if (savedUser) user = JSON.parse(savedUser);
+      updateUI();
+    });
+  </script>
 </body>
 </html>
