@@ -269,7 +269,6 @@
           <button onclick="showModal('promoModal')">🎫 Промо код</button>
         </div>
       </div>
-
       <div class="ios-card">
         <h3>Бърз достъп ⚡</h3>
         <div class="settings-item">
@@ -292,7 +291,6 @@
             <span>Ден 1: 10 тикета</span>
             <button onclick="claimReward(10, 'reward_day1')">Вземи</button>
           </div>
-          <!-- Допълнителни награди могат да се добавят тук със собствени идентификатори -->
         </div>
       </div>
     </section>
@@ -353,7 +351,7 @@
     <section class="content-section" id="settings">
       <div class="ios-card">
         <h3>⚙️ Настройки</h3>
-        <!-- Тук ще се показва съобщението за успешно влизане с logout бутона -->
+        <!-- Тук се показва съобщение за успешен вход с logout бутон и името на потребителя -->
         <div id="loggedInfo"></div>
         <div class="settings-item">
           <span>Нощен режим</span>
@@ -362,7 +360,7 @@
             <span class="slider"></span>
           </label>
         </div>
-        <!-- Показване на бутон за вход, ако потребителят не е логнат -->
+        <!-- Ако потребителят не е логнат, се показва бутон за вход -->
         <div id="authSection" class="tg-login-container" style="margin-top: 12px;">
           <button onclick="showModal('loginModal')">🔐 Вход с Telegram</button>
         </div>
@@ -503,8 +501,12 @@
                                     Успешно влязохте като <strong>${user.first_name}</strong><br>
                                     <button onclick="logout()" style="margin-top:8px;">Изход</button>
                                   </div>`;
-        // Скриваме секцията за вход
         authSection.style.display = 'none';
+        // Премахваме модалния прозорец за вход, ако съществува
+        const loginModal = document.getElementById('loginModal');
+        if (loginModal) {
+          loginModal.parentNode.removeChild(loginModal);
+        }
       } else {
         document.getElementById('welcomeMessage').textContent = 'Добре дошли! 👋';
         loggedInfo.innerHTML = '';
