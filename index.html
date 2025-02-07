@@ -1,70 +1,73 @@
 <!DOCTYPE html>
-<html lang="bg">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>OPENTRADING</title>
   <style>
-    /* Основни CSS променливи */
+    /* Basic CSS variables for a refined iOS look */
     :root {
       --apple-black: #1D1D1F;
       --apple-gray: #F5F5F7;
       --apple-blue: #007AFF;
-      --ios-card-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      --apple-blue-dark: #005BB5;
+      --ios-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       --night-bg: #000000;
       --night-card: #1C1C1E;
+      --modal-bg: #ffffff;
+      --modal-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
     }
-    
+
     * {
       box-sizing: border-box;
     }
-    
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
       background: var(--apple-gray);
       margin: 0;
       -webkit-font-smoothing: antialiased;
       transition: background 0.3s ease;
       overflow-x: hidden;
     }
-    
+
     body.night-mode {
       background: var(--night-bg);
-      color: #FFFFFF;
+      color: #ffffff;
     }
-    
+
     .page-container {
       display: grid;
       grid-template-rows: 1fr auto;
       height: 100vh;
       max-width: 800px;
       margin: 0 auto;
-      filter: none;
     }
-    
+
+    /* Navigation Bar */
     .nav-bar {
       display: flex;
       justify-content: space-around;
       padding: 12px 0;
-      background: rgba(255,255,255,0.92);
+      background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(40px);
-      border-top: 1px solid #E5E5EA;
+      border-top: 1px solid #e5e5ea;
       position: fixed;
       bottom: 0;
       width: 100%;
       max-width: 800px;
       z-index: 10;
     }
-    
+
     body.night-mode .nav-bar {
-      background: rgba(28,28,30,0.92);
-      border-color: #2C2C2E;
+      background: rgba(28, 28, 30, 0.92);
+      border-color: #2c2c2e;
     }
-    
+
     .nav-item {
       padding: 10px;
-      color: #86868B;
-      transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+      color: #86868b;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       cursor: pointer;
       border-radius: 14px;
       font-size: 0.9em;
@@ -74,13 +77,14 @@
       gap: 4px;
       user-select: none;
     }
-    
+
     .nav-item.active {
       color: var(--apple-blue);
-      background: rgba(0,122,255,0.12);
+      background: rgba(0, 122, 255, 0.12);
       transform: translateY(-8px);
     }
-    
+
+    /* Content Sections */
     .content-section {
       display: none;
       padding: 1.2rem;
@@ -88,98 +92,110 @@
       margin-bottom: 76px;
       gap: 1.2rem;
     }
-    
+
     .content-section.active {
       display: grid;
       animation: fadeIn 0.3s ease;
     }
-    
+
     .ios-card {
-      background: white;
+      background: #ffffff;
       border-radius: 18px;
       padding: 1.6rem;
       box-shadow: var(--ios-card-shadow);
       transition: all 0.3s ease;
+      margin-bottom: 1rem;
     }
-    
+
     body.night-mode .ios-card {
       background: var(--night-card);
-      color: #FFFFFF;
+      color: #ffffff;
     }
-    
+
     .ios-card h3 {
       margin: 0 0 1rem 0;
       font-size: 1.2em;
     }
-    
+
     .settings-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 12px 0;
     }
-    
+
     .reward-card {
       display: flex;
       flex-direction: column;
       gap: 8px;
       margin: 10px 0;
     }
-    
+
     .promo-input {
       display: flex;
       gap: 8px;
       margin-top: 12px;
     }
-    
+
+    /* Inputs – updated for a softer look */
     input[type="text"],
     input[type="email"],
     input[type="password"] {
       width: 100%;
       padding: 12px;
-      border-radius: 8px;
-      border: 1px solid #E5E5EA;
-      font-size: 16px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      font-size: 1em;
+      transition: border 0.3s ease;
     }
-    
+
+    input:focus {
+      outline: none;
+      border-color: var(--apple-blue);
+    }
+
+    /* Refined Button Styling */
     button {
-      background: var(--apple-blue);
-      color: white;
+      background: linear-gradient(145deg, var(--apple-blue), var(--apple-blue-dark));
       border: none;
-      padding: 12px 20px;
-      border-radius: 8px;
+      padding: 12px 24px;
+      border-radius: 12px;
       cursor: pointer;
       font-size: 1em;
-      transition: background 0.3s ease;
+      font-weight: 600;
+      color: #fff;
+      transition: transform 0.2s ease, background 0.3s ease;
     }
-    
+
     button:hover {
-      background: #0060d0;
+      background: linear-gradient(145deg, var(--apple-blue-dark), var(--apple-blue));
+      transform: scale(1.02);
     }
-    
-    /* Увеличени секции за графики и новини */
-    .chart-container, .news-container {
+
+    /* Enlarged containers for charts and news */
+    .chart-container,
+    .news-container {
       height: 500px;
       margin: 1rem 0;
       border-radius: 10px;
       overflow: hidden;
       box-shadow: var(--ios-card-shadow);
     }
-    
-    /* Стилове за превключвател (switch) */
+
+    /* iOS-style switch */
     .switch {
       position: relative;
       display: inline-block;
       width: 50px;
       height: 24px;
     }
-    
+
     .switch input {
       opacity: 0;
       width: 0;
       height: 0;
     }
-    
+
     .slider {
       position: absolute;
       cursor: pointer;
@@ -188,10 +204,10 @@
       right: 0;
       bottom: 0;
       background-color: #ccc;
-      transition: .4s;
+      transition: 0.4s;
       border-radius: 24px;
     }
-    
+
     .slider:before {
       position: absolute;
       content: "";
@@ -199,20 +215,20 @@
       width: 18px;
       left: 3px;
       bottom: 3px;
-      background-color: white;
-      transition: .4s;
+      background-color: #ffffff;
+      transition: 0.4s;
       border-radius: 50%;
     }
-    
+
     input:checked + .slider {
       background-color: var(--apple-blue);
     }
-    
+
     input:checked + .slider:before {
       transform: translateX(26px);
     }
-    
-    /* Модален стил за вход/регистрация (екранно блокиращ) */
+
+    /* MODAL STYLES – Apple‑inspired and refined */
     .modal {
       display: none;
       position: fixed;
@@ -225,65 +241,87 @@
       justify-content: center;
       align-items: center;
       padding: 20px;
+      backdrop-filter: blur(10px);
     }
-    
+
     .modal.active {
       display: flex;
     }
-    
+
     .modal-content {
-      background: white;
-      border-radius: 10px;
+      background: var(--modal-bg);
+      border-radius: 20px;
       width: 100%;
       max-width: 420px;
-      padding: 30px;
+      padding: 40px 30px;
       position: relative;
       animation: fadeIn 0.3s ease;
+      box-shadow: var(--modal-shadow);
+      overflow: hidden;
     }
-    
+
     body.night-mode .modal-content {
       background: var(--night-card);
-      color: #FFFFFF;
+      color: #ffffff;
     }
-    
+
     .modal-header {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 20px;
-      position: relative;
+      text-align: center;
+      margin-bottom: 25px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #e5e5ea;
     }
-    
+
     .modal-header h3 {
       margin: 0;
-      font-size: 1.6em;
+      font-size: 2em;
+      font-weight: bold;
+      color: var(--apple-black);
     }
-    
+
+    .modal-header p {
+      margin: 8px 0 0;
+      font-size: 1em;
+      color: #777;
+    }
+
     .modal-close {
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       position: absolute;
-      right: 0;
-      top: 0;
-      font-size: 1.6em;
+      right: 15px;
+      top: 15px;
+      font-size: 1.4em;
       cursor: pointer;
-      color: #888;
+      transition: background 0.3s;
+      color: #555;
     }
-    
+
+    .modal-close:hover {
+      background: rgba(0, 0, 0, 0.2);
+    }
+
     .logged-message {
-      background: rgba(0,122,255,0.12);
+      background: rgba(0, 122, 255, 0.12);
       padding: 10px 14px;
       border-radius: 10px;
       margin-bottom: 12px;
       text-align: center;
       font-weight: bold;
     }
-    
-    /* Стилове за login widget-а */
+
+    /* Login widget styles */
     .login-tabs {
       display: flex;
       margin-bottom: 20px;
-      border-bottom: 2px solid #E5E5EA;
+      border-bottom: 2px solid #e5e5ea;
     }
-    
+
     .login-tab {
       flex: 1;
       text-align: center;
@@ -291,47 +329,57 @@
       cursor: pointer;
       font-size: 1.2em;
       color: var(--apple-black);
+      transition: color 0.3s;
     }
-    
+
     .login-tab.active {
       border-bottom: 3px solid var(--apple-blue);
       font-weight: bold;
+      color: var(--apple-blue);
     }
-    
+
     .login-form > div {
       margin-bottom: 15px;
     }
-    
+
     #loginMessage {
       margin-top: 10px;
       font-weight: bold;
       text-align: center;
     }
-    
+
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
-    
-    /* Допълнителни адаптивни стилове */
+
+    /* Responsive adjustments */
     @media (max-width: 600px) {
-      .ios-card, .modal-content {
+      .ios-card,
+      .modal-content {
         margin: 0 10px;
         padding: 20px;
       }
       .nav-bar {
         padding: 10px 0;
       }
-      .chart-container, .news-container {
+      .chart-container,
+      .news-container {
         height: 450px;
       }
     }
   </style>
   <script>
-    /***************** Функции за регистрация и вход *****************/
-    const backendUrl = 'http://localhost:3000'; // Актуализирайте, ако бекендът е на друг адрес
+    /***************** Functions for Registration and Login *****************/
+    const backendUrl = 'http://localhost:3000'; // Update if backend is hosted elsewhere
 
-    // Зареждаме регистрираните потребители от localStorage (демонстрация – в реалност данните трябва да се съхраняват в база данни)
+    // Load registered users from localStorage (for demo purposes; in production, use a database)
     function loadUsers() {
       return JSON.parse(localStorage.getItem('users') || '{}');
     }
@@ -340,7 +388,7 @@
       localStorage.setItem('users', JSON.stringify(users));
     }
 
-    // Сесията се управлява от сървъра (чрез httpOnly cookies), но тук за демонстрация използваме и localStorage
+    // Session management (for demo purposes, stored in localStorage)
     function getCurrentUser() {
       return localStorage.getItem('currentUser');
     }
@@ -353,7 +401,7 @@
       localStorage.removeItem('currentUser');
     }
 
-    // Изпращане на верификационен код при регистрация
+    // Send verification code during sign up
     async function sendVerificationCode() {
       const email = document.getElementById("regEmail").value.trim();
       const messageDiv = document.getElementById("loginMessage");
@@ -361,7 +409,7 @@
 
       if (!email) {
         messageDiv.style.color = "red";
-        messageDiv.innerText = "Моля, въведете валиден имейл.";
+        messageDiv.innerText = "Please enter a valid email.";
         return;
       }
 
@@ -373,11 +421,11 @@
         });
         const data = await response.json();
         if (!response.ok) {
-          throw new Error(data.error || "Грешка при изпращането на кода.");
+          throw new Error(data.error || "Error sending code.");
         }
         messageDiv.style.color = "green";
         messageDiv.innerText = data.message;
-        // Превключване към въвеждане на кода
+        // Switch to code entry step
         document.getElementById("regStep1").style.display = "none";
         document.getElementById("regStep2").style.display = "block";
       } catch (error) {
@@ -386,7 +434,7 @@
       }
     }
 
-    // Верификация и регистрация – автоматичен вход след регистрация
+    // Verify code and complete registration – automatic sign in after registration
     async function verifyAndRegister() {
       const email = document.getElementById("regEmail").value.trim();
       const password = document.getElementById("regPassword").value.trim();
@@ -396,7 +444,7 @@
 
       if (!code || !password) {
         messageDiv.style.color = "red";
-        messageDiv.innerText = "Моля, попълнете всички полета.";
+        messageDiv.innerText = "Please fill in all fields.";
         return;
       }
 
@@ -408,24 +456,24 @@
         });
         const data = await response.json();
         if (!response.ok) {
-          throw new Error(data.error || "Грешка при верификацията.");
+          throw new Error(data.error || "Verification error.");
         }
-        // Ако имейлът вече съществува, не позволяваме регистрация
+        // Prevent duplicate registration
         let users = loadUsers();
         if (users[email]) {
-          throw new Error("Този имейл вече е регистриран.");
+          throw new Error("This email is already registered.");
         }
-        // Записваме новия потребител
+        // Save new user
         users[email] = {
-          password, 
+          password,
           balance: 0,
           rewards: {}
         };
         saveUsers(users);
-        // Запазваме сесията – автоматичен вход след регистрация
+        // Set session – automatic sign in after registration
         setCurrentUser(email);
         messageDiv.style.color = "green";
-        messageDiv.innerText = "Успешна регистрация! Влизане...";
+        messageDiv.innerText = "Registration successful! Signing in...";
         setTimeout(() => {
           hideModal('loginModal');
           updateUI();
@@ -436,7 +484,7 @@
       }
     }
 
-    // Функция за вход (само имейл и парола)
+    // Sign in (email and password)
     function login() {
       const email = document.getElementById("loginEmail").value.trim();
       const password = document.getElementById("loginPassword").value.trim();
@@ -445,28 +493,28 @@
 
       if (!email || !password) {
         messageDiv.style.color = "red";
-        messageDiv.innerText = "Моля, попълнете всички полета.";
+        messageDiv.innerText = "Please fill in all fields.";
         return;
       }
       let users = loadUsers();
       if (!users[email]) {
         messageDiv.style.color = "red";
-        messageDiv.innerText = "Няма регистриран потребител с този имейл.";
+        messageDiv.innerText = "No user found with this email.";
         return;
       }
       if (users[email].password !== password) {
         messageDiv.style.color = "red";
-        messageDiv.innerText = "Грешна парола.";
+        messageDiv.innerText = "Incorrect password.";
         return;
       }
       setCurrentUser(email);
       messageDiv.style.color = "green";
-      messageDiv.innerText = "Успешен вход!";
+      messageDiv.innerText = "Successfully signed in!";
       hideModal('loginModal');
       updateUI();
     }
 
-    /***************** Функции за UI *****************/
+    /***************** UI Update Functions *****************/
     function updateUI() {
       const loggedInfo = document.getElementById('loggedInfo');
       const welcomeMessage = document.getElementById('welcomeMessage');
@@ -474,37 +522,37 @@
       if (currentUser) {
         let users = loadUsers();
         let user = users[currentUser];
-        welcomeMessage.textContent = `Здравейте, ${currentUser}! 👋`;
+        welcomeMessage.textContent = `Welcome, ${currentUser}! 👋`;
         let balanceKey = `balance_${currentUser}`;
         let balance = parseInt(localStorage.getItem(balanceKey)) || user.balance || 0;
-        document.getElementById('balance').textContent = `${balance} тикета`;
+        document.getElementById('balance').textContent = `${balance} tickets`;
         loggedInfo.innerHTML = `<div class="logged-message">
-                                    Успешно влязохте като <strong>${currentUser}</strong>
-                                    <br>
-                                    <button onclick="logout()">Изход</button>
-                                  </div>`;
+                                  Signed in as <strong>${currentUser}</strong>
+                                  <br>
+                                  <button onclick="logout()">Sign Out</button>
+                                </div>`;
         document.getElementById('authSection').style.display = 'none';
       } else {
-        welcomeMessage.textContent = 'Добре дошли! 👋';
+        welcomeMessage.textContent = 'Welcome to OpenTrading! 👋';
         loggedInfo.innerHTML = '';
         document.getElementById('authSection').style.display = 'block';
-        // Ако няма логнат потребител, винаги показваме модала за вход/регистрация
+        // Always show the login modal if not signed in
         showModal('loginModal');
       }
     }
 
     function logout() {
-      if (confirm("Сигурни ли сте, че искате да излезете?")) {
+      if (confirm("Are you sure you want to sign out?")) {
         clearCurrentUser();
         updateUI();
         showModal('loginModal');
       }
     }
 
-    // Функции за награди и промо код
+    /***************** Reward and Promo Functions *****************/
     function checkLogin() {
       if (!getCurrentUser()) {
-        alert("Моля, влезте в системата, за да използвате тази функция.");
+        alert("Please sign in to use this feature.");
         return false;
       }
       return true;
@@ -515,16 +563,16 @@
       let currentUser = getCurrentUser();
       let fullRewardKey = `${rewardKeySuffix}_${currentUser}`;
       if (localStorage.getItem(fullRewardKey)) {
-        alert("Вече сте взели тази награда.");
+        alert("You have already claimed this reward.");
         return;
       }
       let balanceKey = `balance_${currentUser}`;
       let balance = parseInt(localStorage.getItem(balanceKey)) || 0;
       balance += amount;
       localStorage.setItem(balanceKey, balance);
-      document.getElementById('balance').textContent = `${balance} тикета`;
+      document.getElementById('balance').textContent = `${balance} tickets`;
       localStorage.setItem(fullRewardKey, 'claimed');
-      alert(`Получихте ${amount} тикета!`);
+      alert(`You've received ${amount} tickets!`);
     }
 
     function activatePromo() {
@@ -533,7 +581,7 @@
       let currentUser = getCurrentUser();
       const promoKey = `promo_${promoCode}_claimed_${currentUser}`;
       if (localStorage.getItem(promoKey)) {
-        alert("Този промо код вече е използван.");
+        alert("This promo code has already been used.");
         return;
       }
       if (promoCode === "TRADEOS") {
@@ -541,11 +589,11 @@
         localStorage.setItem(promoKey, 'claimed');
         hideModal('promoModal');
       } else {
-        alert("Невалиден промо код!");
+        alert("Invalid promo code!");
       }
     }
 
-    /***************** Модал и навигация *****************/
+    /***************** Modal and Navigation Functions *****************/
     function hideModal(modalId) {
       const modal = document.getElementById(modalId);
       if (modal) modal.classList.remove('active');
@@ -586,20 +634,20 @@
       }
     }
 
-    /***************** Инициализация *****************/
+    /***************** Initialization *****************/
     document.addEventListener('DOMContentLoaded', () => {
       updateUI();
 
-      // Ако няма логнат потребител, гарантираме, че съдържанието не е достъпно
+      // Show login modal if not signed in
       if (!getCurrentUser()) {
         showModal('loginModal');
       }
       
-      // Навигационни бутони
+      // Navigation button event listeners
       document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', function() {
           if (!getCurrentUser()) {
-            alert("Моля, влезте в системата, за да използвате тази функция.");
+            alert("Please sign in to use this feature.");
             return;
           }
           document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
@@ -612,7 +660,7 @@
         });
       });
 
-      // Нощен режим
+      // Night mode toggle
       const nightModeToggle = document.getElementById('nightModeToggle');
       nightModeToggle.addEventListener('change', (e) => {
         document.body.classList.toggle('night-mode');
@@ -623,24 +671,24 @@
 </head>
 <body>
   <div class="page-container">
-    <!-- Секции (достъпни само след успешен вход) -->
+    <!-- Sections (accessible after sign in) -->
     <section class="content-section active" id="home">
       <div class="ios-card">
-        <h3 id="welcomeMessage">Добре дошли! 👋</h3>
-        <p>Вашият баланс: <strong id="balance">0 тикета</strong></p>
+        <h3 id="welcomeMessage">Welcome to OpenTrading! 👋</h3>
+        <p>Your Balance: <strong id="balance">0 tickets</strong></p>
         <div class="reward-card">
-          <button onclick="showSection('rewards')">🎁 Награди</button>
-          <button onclick="showModal('promoModal')">🎫 Промо код</button>
+          <button onclick="showSection('rewards')">🎁 Rewards</button>
+          <button onclick="showModal('promoModal')">🎫 Promo Code</button>
         </div>
       </div>
       <div class="ios-card">
-        <h3>Бърз достъп ⚡</h3>
+        <h3>Quick Access ⚡</h3>
         <div class="settings-item">
-          <span>Търговия с крипто</span>
+          <span>Crypto Trading</span>
           <span>➔</span>
         </div>
         <div class="settings-item">
-          <span>Портфейл анализ</span>
+          <span>Portfolio Analysis</span>
           <span>➔</span>
         </div>
       </div>
@@ -648,11 +696,11 @@
 
     <section class="content-section" id="rewards">
       <div class="ios-card">
-        <h3>🎁 Дневни награди</h3>
+        <h3>🎁 Daily Rewards</h3>
         <div class="reward-card">
           <div class="settings-item">
-            <span>Ден 1: 10 тикета</span>
-            <button onclick="claimReward(10, 'reward_day1')">Вземи</button>
+            <span>Day 1: 10 tickets</span>
+            <button onclick="claimReward(10, 'reward_day1')">Claim</button>
           </div>
         </div>
       </div>
@@ -660,7 +708,7 @@
 
     <section class="content-section" id="charts">
       <div class="ios-card">
-        <h3>Цени в реално време 📊</h3>
+        <h3>Real Time Prices 📊</h3>
         <div class="chart-container">
           <div class="tradingview-widget-container">
             <div class="tradingview-widget-container__widget"></div>
@@ -672,7 +720,7 @@
               "timezone": "Etc/UTC",
               "theme": "light",
               "style": "1",
-              "locale": "bg",
+              "locale": "en",
               "allow_symbol_change": true,
               "hide_side_toolbar": false,
               "hidevolume": true,
@@ -688,7 +736,7 @@
 
     <section class="content-section" id="news">
       <div class="ios-card">
-        <h3>📰 Новини</h3>
+        <h3>News 📰</h3>
         <div class="news-container">
           <div class="tradingview-widget-container">
             <div class="tradingview-widget-container__widget"></div>
@@ -700,7 +748,7 @@
               "displayMode": "regular",
               "width": "100%",
               "height": "500",
-              "locale": "bg"
+              "locale": "en"
             }
             </script>
           </div>
@@ -710,73 +758,74 @@
 
     <section class="content-section" id="settings">
       <div class="ios-card">
-        <h3>⚙️ Настройки</h3>
+        <h3>Settings ⚙️</h3>
         <div id="loggedInfo"></div>
         <div class="settings-item">
-          <span>Нощен режим</span>
+          <span>Night Mode</span>
           <label class="switch">
             <input type="checkbox" id="nightModeToggle">
             <span class="slider"></span>
           </label>
         </div>
         <div id="authSection" style="margin-top: 12px; display:none;">
-          <button onclick="showModal('loginModal')">🔐 Вход / Регистрация</button>
+          <button onclick="showModal('loginModal')">🔐 Sign In / Sign Up</button>
         </div>
       </div>
     </section>
 
     <nav class="nav-bar">
-      <div class="nav-item active" data-section="home">🏠 Начало</div>
-      <div class="nav-item" data-section="charts">📈 Графики</div>
-      <div class="nav-item" data-section="news">📰 Новини</div>
-      <div class="nav-item" data-section="settings">⚙️ Настройки</div>
+      <div class="nav-item active" data-section="home">🏠 Home</div>
+      <div class="nav-item" data-section="charts">📈 Charts</div>
+      <div class="nav-item" data-section="news">📰 News</div>
+      <div class="nav-item" data-section="settings">⚙️ Settings</div>
     </nav>
   </div>
 
-  <!-- Модал за вход/регистрация (екранно блокиращ) -->
+  <!-- Modal for Sign In / Sign Up (Login Modal) -->
   <div class="modal" id="loginModal">
     <div class="modal-content">
       <div class="modal-header">
-        <h3>Вход / Регистрация</h3>
-        <!-- Бутонът за затваряне е скрит, за да не може модалът да се затвори без влизане -->
+        <h3>Welcome to OpenTrading</h3>
+        <p>Your gateway to smart trading and exclusive rewards.</p>
+        <!-- Close button is hidden to enforce sign in -->
         <span class="modal-close" style="display:none;">×</span>
       </div>
-      <!-- Табове за превключване -->
+      <!-- Tabs for switching -->
       <div class="login-tabs">
-        <div id="loginTab" class="login-tab active" onclick="switchLoginTab('login')">Вход</div>
-        <div id="registerTab" class="login-tab" onclick="switchLoginTab('register')">Регистрация</div>
+        <div id="loginTab" class="login-tab active" onclick="switchLoginTab('login')">Sign In</div>
+        <div id="registerTab" class="login-tab" onclick="switchLoginTab('register')">Sign Up</div>
       </div>
       <div id="loginForm" class="login-form">
         <div>
-          <input type="email" id="loginEmail" placeholder="Имейл" required />
+          <input type="email" id="loginEmail" placeholder="Email" required />
         </div>
         <div>
-          <input type="password" id="loginPassword" placeholder="Парола" required />
+          <input type="password" id="loginPassword" placeholder="Password" required />
         </div>
         <div>
-          <button onclick="login()">Вход</button>
+          <button onclick="login()">Sign In</button>
         </div>
       </div>
       <div id="registerForm" class="login-form" style="display: none;">
-        <!-- Стъпка 1: Имейл и парола + бутон за изпращане на код -->
+        <!-- Step 1: Email and Password + Send Code -->
         <div id="regStep1">
           <div>
-            <input type="email" id="regEmail" placeholder="Имейл" required />
+            <input type="email" id="regEmail" placeholder="Email" required />
           </div>
           <div>
-            <input type="password" id="regPassword" placeholder="Парола" required />
+            <input type="password" id="regPassword" placeholder="Password" required />
           </div>
           <div>
-            <button onclick="sendVerificationCode()">Изпрати код</button>
+            <button onclick="sendVerificationCode()">Send Code</button>
           </div>
         </div>
-        <!-- Стъпка 2: Въвеждане на кода -->
+        <!-- Step 2: Code Entry -->
         <div id="regStep2" style="display: none;">
           <div>
-            <input type="text" id="regCode" placeholder="Въведете кода" required />
+            <input type="text" id="regCode" placeholder="Enter Code" required />
           </div>
           <div>
-            <button onclick="verifyAndRegister()">Регистрирай се</button>
+            <button onclick="verifyAndRegister()">Register</button>
           </div>
         </div>
       </div>
@@ -784,19 +833,19 @@
     </div>
   </div>
 
-  <!-- Промо модал -->
+  <!-- Promo Modal with Enhanced Apple‑inspired styling -->
   <div class="modal" id="promoModal">
     <div class="modal-content">
       <div class="modal-header">
-        <h3>🎫 Активирай промо код</h3>
+        <h3>Exclusive Promo Activation</h3>
+        <p>Enter your promo code below to unlock special rewards.</p>
         <span class="modal-close" onclick="hideModal('promoModal')">×</span>
       </div>
       <div class="promo-input">
-        <input type="text" id="promoCode" placeholder="Въведете промо код">
-        <button onclick="activatePromo()">Активирай</button>
+        <input type="text" id="promoCode" placeholder="Enter promo code" />
+        <button onclick="activatePromo()">Activate</button>
       </div>
     </div>
   </div>
 </body>
 </html>
-
