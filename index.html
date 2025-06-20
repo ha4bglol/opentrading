@@ -1,410 +1,637 @@
 <!DOCTYPE html>
-<html lang="bg" dir="ltr">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <!-- Chosen Palette: Psychologically-Informed Trust & Action Palette -->
-    <!-- Application Structure Plan: A tabbed single-page application (SPA) architecture is chosen to align with the "iOS style" and the "Law of Hick," reducing cognitive load by organizing complex functionality into clear, distinct sections (Markets, News, Education, Portfolio). This structure allows users to focus on one primary task at a time, creating an intuitive, app-like experience. Navigation is handled by a persistent top header on desktop and a bottom tab bar on mobile, applying "Fitts's Law" by placing controls in easily accessible areas. The flow is designed for progressive disclosure; for example, the Education section presents high-level categories first, then allows users to drill down, preventing them from being overwhelmed. -->
-    <!-- Visualization & Content Choices: 
-        - Report Info: Charting Engine -> Goal: Provide professional-grade analysis -> Viz: TradingView Advanced Charts -> Interaction: Full user control over indicators, drawings, and timeframes. Justification: This is the industry standard for power and reliability, essential for the "prosumer" target audience. Library: TradingView.
-        - Report Info: News Hub -> Goal: Deliver actionable intelligence -> Viz: A card-based, filterable list -> Interaction: Users can filter by category. Sentiment is shown via colored dots. Justification: This transforms a passive feed into an active analytical tool, as outlined in the blueprint. Method: HTML/CSS/JS.
-        - Report Info: Education Ecosystem -> Goal: Guide users from novice to expert -> Viz: A structured grid of course cards with progress indicators -> Interaction: Users click cards to see course details. Justification: This gamified, visually organized approach makes learning engaging and tracks progress, fostering user retention. Method: HTML/CSS/JS.
-        - Report Info: Internationalization -> Goal: Global reach -> Viz: A simple dropdown menu -> Interaction: User selects a language, and the UI text updates instantly. Justification: Essential for a "world-class" platform as defined in the report. Method: JS dictionary lookup.
-    -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-    <title data-lang-key="title">OpenTrading - Платформа от Световна Класа</title>
+    <title>OpenTrading - Professional Platform</title>
     
+    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter for iOS-like feel -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- TradingView Charting Library -->
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 
     <style>
-        :root {
-            --brand-blue: #0A84FF;
-            --brand-green: #30D158;
-            --brand-red: #FF453A;
-            --brand-orange: #FF9F0A;
-            --brand-teal: #64D2FF;
-
-            --light-bg: #F2F2F7;
-            --light-card-bg: #FFFFFF;
-            --light-text-primary: #000000;
-            --light-text-secondary: #636366;
-            --light-separator: rgba(60, 60, 67, 0.29);
-            --light-header-bg: rgba(249, 249, 249, 0.85);
-
-            --dark-bg: #0d1117;
-            --dark-card-bg: #161b22;
-            --dark-text-primary: #e6edf3;
-            --dark-text-secondary: #848d97;
-            --dark-separator: rgba(255, 255, 255, 0.15);
-            --dark-header-bg: rgba(22, 27, 34, 0.85);
-            
-            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            --shadow-glow: 0 0 20px rgba(10, 132, 255, 0.25);
-            --radius-main: 1rem; /* 16px */
-            --radius-inner: 0.75rem; /* 12px */
-        }
-        html { scroll-behavior: smooth; }
+        /* Custom styles to achieve the professional, iOS-inspired look */
         body {
-            font-family: var(--font-family);
-            background-color: var(--dark-bg);
-            color: var(--dark-text-primary);
-            transition: background-color 0.3s ease, color 0.3s ease;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
-        body.light-mode {
-            background-color: var(--light-bg);
-            color: var(--light-text-primary);
+
+        /* --- Light Mode --- */
+        .light-mode {
+            --bg-primary: #f0f2f5; /* Off-white like iOS settings */
+            --bg-secondary: #ffffff; /* Pure white for cards/modals */
+            --bg-tertiary: #e5e5ea; /* Lighter gray for inputs */
+            --text-primary: #000000;
+            --text-secondary: #6b7280; /* Gray for subtitles */
+            --border-color: #d1d5db;
+            --accent-color: #007aff; /* Apple Blue */
         }
-        .glass-header {
-            background-color: var(--dark-header-bg);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border-bottom: 1px solid var(--dark-separator);
-            transition: background-color 0.3s ease, border-color 0.3s ease;
+
+        /* --- Dark Mode --- */
+        .dark-mode {
+            --bg-primary: #000000; /* True black for OLED */
+            --bg-secondary: #1c1c1e; /* Dark gray for cards/modals */
+            --bg-tertiary: #2c2c2e; /* Even lighter gray for inputs */
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa; /* Lighter gray for subtitles */
+            --border-color: #3a3a3c;
+            --accent-color: #0a84ff; /* Lighter Apple Blue for dark mode */
         }
-        body.light-mode .glass-header {
-            background-color: var(--light-header-bg);
-            border-bottom: 1px solid var(--light-separator);
+
+        .bg-primary { background-color: var(--bg-primary); }
+        .bg-secondary { background-color: var(--bg-secondary); }
+        .bg-tertiary { background-color: var(--bg-tertiary); }
+        .text-primary { color: var(--text-primary); }
+        .text-secondary { color: var(--text-secondary); }
+        .border-custom { border-color: var(--border-color); }
+        .accent-text { color: var(--accent-color); }
+        .accent-bg { background-color: var(--accent-color); }
+        .accent-border { border-color: var(--accent-color); }
+
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+        ::-webkit-scrollbar-thumb { background: var(--bg-tertiary); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--border-color); }
+
+        /* Hide spinner from number inputs */
+        input[type='number']::-webkit-inner-spin-button,
+        input[type='number']::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
         }
-        .content-section { display: none; }
-        .content-section.active { display: block; animation: fadeIn 0.5s ease-in-out; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        input[type='number'] {
+            -moz-appearance: textfield;
         }
-        .progress-bar-inner { transition: width 0.5s ease-out; }
+        
+        /* Smooth transitions */
+        * {
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+
+        /* For the registration modal steps */
+        .step-content {
+            display: none;
+        }
+        .step-content.active {
+            display: block;
+        }
     </style>
 </head>
+<body class="bg-primary text-primary antialiased">
 
-<body class="dark-mode">
-
-    <!-- Desktop Header -->
-    <header id="desktop-header" class="glass-header sticky top-0 z-50 hidden lg:block">
-        <div class="mx-auto max-w-7xl px-4">
-            <div class="grid grid-cols-3 items-center h-16">
-                <nav class="flex items-center space-x-6">
-                    <button class="nav-item text-sm font-semibold" data-section="charts" data-lang-key="nav_charts">Графики</button>
-                    <button class="nav-item text-sm font-semibold" data-section="news" data-lang-key="nav_news">Новини</button>
-                    <button class="nav-item text-sm font-semibold" data-section="education" data-lang-key="nav_education">Обучение</button>
-                </nav>
-                <div class="flex justify-center">
-                    <div class="text-xl font-extrabold tracking-tighter" data-lang-key="logo">OPENTRADING</div>
+    <!-- ======== Authentication Container ======== -->
+    <div id="auth-container" class="min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-md">
+            <!-- Login View -->
+            <div id="login-view" class="bg-secondary rounded-2xl shadow-lg p-8">
+                <div class="text-center mb-8">
+                    <i class="fas fa-chart-line text-4xl accent-text"></i>
+                    <h1 class="text-3xl font-bold text-primary mt-4" data-i18n-key="login_welcome_title">Welcome to OpenTrading</h1>
+                    <p class="text-secondary" data-i18n-key="login_welcome_subtitle">Sign in to access your portfolio.</p>
                 </div>
-                <div class="flex items-center justify-end space-x-4">
-                    <!-- Language Selector -->
-                    <div class="relative" id="lang-switcher">
-                        <button class="flex items-center text-sm font-medium text-gray-400 hover:text-white transition">
-                            <span>🌐</span>
-                            <span id="current-lang-text" class="ml-2">Български</span>
-                        </button>
-                        <div id="lang-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-[var(--dark-card-bg)] border border-[var(--dark-separator)] rounded-lg shadow-lg py-1">
-                            <!-- Languages will be injected here by JS -->
-                        </div>
+                
+                <form id="login-form">
+                    <div class="mb-4">
+                        <label for="login-email" class="block text-sm font-medium text-secondary" data-i18n-key="email_label">Email</label>
+                        <input type="email" id="login-email" class="mt-1 block w-full bg-tertiary border-transparent rounded-lg px-4 py-3 text-primary focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                     </div>
-                    <!-- Theme Toggle -->
-                    <label for="theme-toggle" class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" id="theme-toggle" class="sr-only peer">
-                        <div class="w-11 h-6 bg-gray-600 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--brand-blue)]"></div>
+                    <div class="mb-4">
+                        <label for="login-password" class="block text-sm font-medium text-secondary" data-i18n-key="password_label">Password</label>
+                        <input type="password" id="login-password" class="mt-1 block w-full bg-tertiary border-transparent rounded-lg px-4 py-3 text-primary focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                    <p id="login-error" class="text-red-500 text-sm mb-4 h-5"></p>
+                    <button type="submit" class="w-full accent-bg text-white font-bold py-3 px-4 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-wait" data-i18n-key="login_button">Sign In</button>
+                </form>
+
+                <div class="text-center mt-6">
+                    <a href="#" id="forgot-password-link" class="text-sm accent-text hover:underline" data-i18n-key="forgot_password_link">Forgot Password?</a>
+                </div>
+                <div class="mt-8 text-center">
+                    <p class="text-secondary"><span data-i18n-key="no_account_prompt">Don't have an account?</span> <a href="#" id="show-register-link" class="font-bold accent-text hover:underline" data-i18n-key="register_link">Register</a></p>
+                </div>
+            </div>
+
+            <!-- Forgot Password View -->
+            <div id="forgot-password-view" class="hidden bg-secondary rounded-2xl shadow-lg p-8">
+                <h2 class="text-2xl font-bold text-primary mb-2" data-i18n-key="reset_password_title">Reset Password</h2>
+                <p class="text-secondary mb-6" data-i18n-key="reset_password_instructions">Enter your email and we'll send you a link to get back into your account.</p>
+                <form id="forgot-password-form">
+                    <div class="mb-4">
+                        <label for="reset-email" class="block text-sm font-medium text-secondary" data-i18n-key="email_label">Email</label>
+                        <input type="email" id="reset-email" class="mt-1 block w-full bg-tertiary border-transparent rounded-lg px-4 py-3 text-primary focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                    <p id="reset-error" class="text-red-500 text-sm mb-4 h-5"></p>
+                    <p id="reset-success" class="text-green-500 text-sm mb-4 h-5"></p>
+                    <button type="submit" class="w-full accent-bg text-white font-bold py-3 px-4 rounded-lg hover:opacity-90 transition-opacity" data-i18n-key="send_reset_link_button">Send Reset Link</button>
+                </form>
+                <div class="text-center mt-6">
+                    <a href="#" id="back-to-login-link" class="text-sm accent-text hover:underline" data-i18n-key="back_to_login_link">Back to Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ======== Verify Email Container ======== -->
+    <div id="verify-email-container" class="hidden min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-md bg-secondary rounded-2xl shadow-lg p-8 text-center">
+            <i class="fas fa-envelope-open-text text-5xl accent-text mb-6"></i>
+            <h2 class="text-3xl font-bold text-primary mb-2" data-i18n-key="verify_email_title">Verify Your Email</h2>
+            <p class="text-secondary mb-6">
+                <span data-i18n-key="verify_email_instructions_part1">A verification link has been sent to </span>
+                <strong id="verification-email-span" class="text-primary">your-email@example.com</strong>.
+                <span data-i18n-key="verify_email_instructions_part2"> Please check your inbox and click the link to activate your account.</span>
+            </p>
+            
+            <button id="resend-verification-button" class="w-full accent-bg text-white font-bold py-3 px-4 rounded-lg hover:opacity-90 transition-opacity mb-2" data-i18n-key="resend_email_button">Resend Verification Email</button>
+            <p id="resend-status" class="text-green-500 text-sm mb-4 h-5"></p>
+            
+            <button id="check-verification-button" class="w-full bg-tertiary text-primary font-bold py-3 px-4 rounded-lg hover:opacity-90 transition-opacity mb-6" data-i18n-key="check_verification_button">I've Verified, Continue</button>
+
+            <p class="text-secondary text-sm"><span data-i18n-key="wrong_account_prompt">Wrong account?</span> 
+                <a href="#" id="logout-from-verify-button" class="font-bold accent-text hover:underline" data-i18n-key="logout_button">Logout</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Registration Modal -->
+    <div id="register-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4">
+        <div class="bg-secondary rounded-2xl shadow-xl w-full max-w-md max-h-full overflow-y-auto">
+            <div class="p-8 relative">
+                <button id="close-register-modal" class="absolute top-4 right-4 text-secondary hover:text-primary">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+                <div id="register-step-1" class="step-content active">
+                    <h2 class="text-2xl font-bold text-primary mb-2" data-i18n-key="register_step1_title">Create Account (Step 1/3)</h2>
+                    <p class="text-secondary mb-6" data-i18n-key="register_step1_subtitle">Start with your credentials.</p>
+                    <form id="register-form-step1">
+                        <div class="mb-4">
+                             <label for="register-email" class="block text-sm font-medium text-secondary" data-i18n-key="email_label">Email</label>
+                             <input type="email" id="register-email" class="mt-1 block w-full bg-tertiary border-transparent rounded-lg px-4 py-3 text-primary" required>
+                        </div>
+                        <div class="mb-4">
+                             <label for="register-password" class="block text-sm font-medium text-secondary" data-i18n-key="password_label">Password</label>
+                             <input type="password" id="register-password" class="mt-1 block w-full bg-tertiary border-transparent rounded-lg px-4 py-3 text-primary" required>
+                             <p class="text-xs text-secondary mt-1" data-i18n-key="password_strength_prompt">Minimum 6 characters.</p>
+                        </div>
+                         <div class="mb-6">
+                             <label for="register-confirm-password" class="block text-sm font-medium text-secondary" data-i18n-key="confirm_password_label">Confirm Password</label>
+                             <input type="password" id="register-confirm-password" class="mt-1 block w-full bg-tertiary border-transparent rounded-lg px-4 py-3 text-primary" required>
+                        </div>
+                        <p id="register-step1-error" class="text-red-500 text-sm mb-4 h-5"></p>
+                        <button type="submit" class="w-full accent-bg text-white font-bold py-3 px-4 rounded-lg" data-i18n-key="next_button">Next: Personal Details</button>
+                    </form>
+                </div>
+                 <div id="register-step-2" class="step-content">
+                    <h2 class="text-2xl font-bold text-primary mb-2" data-i18n-key="register_step2_title">Personal Details (Step 2/3)</h2>
+                     <p class="text-secondary mb-6" data-i18n-key="register_step2_subtitle">Required for account verification.</p>
+                     <form id="register-form-step2">
+                         <div class="mb-4">
+                             <label for="register-fullname" class="block text-sm font-medium text-secondary" data-i18n-key="fullname_label">Full Name</label>
+                             <input type="text" id="register-fullname" class="mt-1 block w-full bg-tertiary border-transparent rounded-lg px-4 py-3 text-primary" required>
+                         </div>
+                         <div class="mb-6">
+                            <label for="register-username" class="block text-sm font-medium text-secondary" data-i18n-key="username_label">Username</label>
+                            <input type="text" id="register-username" class="mt-1 block w-full bg-tertiary border-transparent rounded-lg px-4 py-3 text-primary" required>
+                        </div>
+                         <p id="register-step2-error" class="text-red-500 text-sm mb-4 h-5"></p>
+                         <div class="flex space-x-4">
+                            <button type="button" id="register-back-step1" class="w-1/2 bg-tertiary text-primary font-bold py-3 px-4 rounded-lg" data-i18n-key="back_button">Back</button>
+                            <button type="submit" class="w-1/2 accent-bg text-white font-bold py-3 px-4 rounded-lg" data-i18n-key="next_button">Next: Agreements</button>
+                        </div>
+                     </form>
+                </div>
+                 <div id="register-step-3" class="step-content">
+                    <h2 class="text-2xl font-bold text-primary mb-2" data-i18n-key="register_step3_title">Final Step (Step 3/3)</h2>
+                     <p class="text-secondary mb-6" data-i18n-key="register_step3_subtitle">Please review and accept our terms.</p>
+                     <form id="register-form-step3">
+                         <div class="space-y-4 mb-6">
+                            <label class="flex items-start space-x-3">
+                                <input type="checkbox" id="terms-agree" class="mt-1 h-5 w-5 accent-bg rounded border-gray-300 focus:ring-blue-500" required>
+                                <span class="text-sm text-secondary"><span data-i18n-key="agree_to_terms_prompt">I agree to the</span> <a href="#" class="accent-text underline">Terms & Conditions</a>.</span>
+                            </label>
+                            <label class="flex items-start space-x-3">
+                                <input type="checkbox" id="age-confirm" class="mt-1 h-5 w-5 accent-bg rounded border-gray-300 focus:ring-blue-500" required>
+                                <span class="text-sm text-secondary" data-i18n-key="age_confirm_prompt">I confirm I am 18 years of age or older.</span>
+                            </label>
+                         </div>
+                         <p id="register-step3-error" class="text-red-500 text-sm mb-4 h-5"></p>
+                         <div class="flex space-x-4">
+                            <button type="button" id="register-back-step2" class="w-1/2 bg-tertiary text-primary font-bold py-3 px-4 rounded-lg" data-i18n-key="back_button">Back</button>
+                            <button type="submit" class="w-1/2 accent-bg text-white font-bold py-3 px-4 rounded-lg disabled:opacity-50 disabled:cursor-wait" data-i18n-key="create_account_button">Create Account</button>
+                        </div>
+                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ======== Main Application Container ======== -->
+    <div id="main-app-container" class="hidden h-screen w-screen flex flex-col md:flex-row">
+        <!-- Sidebar Navigation (Desktop) -->
+        <nav id="desktop-nav" class="hidden md:flex flex-col w-64 bg-secondary border-r border-custom p-4 space-y-2">
+            <div class="px-4 py-2 mb-4">
+                <h1 class="text-2xl font-bold text-primary"><i class="fas fa-chart-line accent-text"></i> OpenTrading</h1>
+            </div>
+            <a href="#" class="nav-item flex items-center space-x-3 px-4 py-3 rounded-lg text-primary hover:bg-tertiary" data-section="charts">
+                <i class="fas fa-chart-pie w-6 text-center"></i><span data-i18n-key="nav_charts">Charts</span>
+            </a>
+            <a href="#" class="nav-item flex items-center space-x-3 px-4 py-3 rounded-lg text-secondary hover:bg-tertiary" data-section="news">
+                <i class="fas fa-newspaper w-6 text-center"></i><span data-i18n-key="nav_news">News</span>
+            </a>
+            <a href="#" class="nav-item flex items-center space-x-3 px-4 py-3 rounded-lg text-secondary hover:bg-tertiary" data-section="education">
+                <i class="fas fa-book w-6 text-center"></i><span data-i18n-key="nav_education">Education</span>
+            </a>
+            <a href="#" class="nav-item flex items-center space-x-3 px-4 py-3 rounded-lg text-secondary hover:bg-tertiary" data-section="portfolio">
+                <i class="fas fa-wallet w-6 text-center"></i><span data-i18n-key="nav_portfolio">Portfolio</span>
+            </a>
+            <a href="#" class="nav-item flex items-center space-x-3 px-4 py-3 rounded-lg text-secondary hover:bg-tertiary" data-section="api">
+                <i class="fas fa-code w-6 text-center"></i><span data-i18n-key="nav_api">API</span>
+            </a>
+            <div class="flex-grow"></div>
+            <!-- Settings Controls -->
+            <div class="space-y-4 p-4">
+                 <!-- Language Switcher -->
+                <div class="relative">
+                    <button id="lang-switcher" class="w-full flex justify-between items-center text-left bg-tertiary px-4 py-2 rounded-lg">
+                        <span class="flex items-center"><i class="fas fa-globe mr-2"></i><span id="current-lang-text">English</span></span>
+                        <i class="fas fa-chevron-down text-xs"></i>
+                    </button>
+                    <div id="lang-dropdown" class="hidden absolute bottom-full mb-2 w-full bg-secondary border border-custom rounded-lg shadow-lg z-20">
+                        <!-- Languages populated by JS -->
+                    </div>
+                </div>
+                <!-- Theme Toggle -->
+                <div class="flex items-center justify-between bg-tertiary px-4 py-2 rounded-lg">
+                    <span class="text-secondary"><i class="fas fa-sun"></i></span>
+                    <label for="theme-toggle-desktop" class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="theme-toggle-desktop" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-400 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                    </label>
+                    <span class="text-secondary"><i class="fas fa-moon"></i></span>
+                </div>
+            </div>
+             <!-- User Profile Section -->
+            <div id="user-profile-section" class="border-t border-custom pt-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full accent-bg flex items-center justify-center text-white font-bold text-lg" id="user-avatar"></div>
+                    <div class="flex-1 overflow-hidden">
+                        <p class="text-sm font-semibold text-primary truncate" id="user-fullname"></p>
+                        <p class="text-xs text-secondary truncate" id="user-email"></p>
+                    </div>
+                    <button id="logout-button" class="text-secondary hover:text-red-500 text-xl px-2">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col overflow-hidden">
+            <!-- Mobile Header -->
+            <header class="md:hidden flex items-center justify-between p-4 bg-secondary border-b border-custom">
+                <h1 class="text-xl font-bold text-primary"><i class="fas fa-chart-line accent-text"></i> OpenTrading</h1>
+                 <div class="flex items-center space-x-4">
+                    <button id="mobile-logout-button" class="text-primary text-xl"><i class="fas fa-sign-out-alt"></i></button>
+                    <label for="theme-toggle-mobile" class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="theme-toggle-mobile" class="sr-only peer">
+                         <div class="w-11 h-6 bg-gray-400 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                     </label>
                 </div>
-            </div>
-        </div>
-    </header>
+            </header>
 
-    <!-- Main Content -->
-    <main class="pb-24 lg:pb-8 lg:pt-8">
-        
-        <!-- Markets / Charts Section -->
-        <section id="charts-section" class="content-section">
-            <div class="mx-auto max-w-7xl px-4">
-                <h1 class="text-3xl font-bold tracking-tight mb-4" data-lang-key="charts_title">Пазари</h1>
-                <div class="relative mb-6">
-                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                        <span class="text-gray-500">🔎</span>
+            <!-- App Sections -->
+            <div class="flex-1 overflow-y-auto p-4 md:p-8">
+                <section id="charts-section" class="app-section">
+                    <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6">
+                        <h2 class="text-3xl font-bold text-primary mb-2 md:mb-0" data-i18n-key="section_title_charts">Charts</h2>
+                        <div class="relative w-full md:w-64">
+                             <input type="text" id="symbol-search-input" placeholder="Search symbol e.g., AAPL" data-i18n-key="search_symbol_placeholder" class="w-full bg-tertiary border-transparent rounded-lg px-4 py-2 text-primary focus:outline-none focus:ring-2 focus:ring-blue-500">
+                             <i class="fas fa-search absolute right-4 top-1/2 -translate-y-1/2 text-secondary"></i>
+                        </div>
                     </div>
-                    <input type="text" id="symbol-search" class="block w-full rounded-md border-0 py-2.5 pl-10 bg-[var(--dark-card-bg)] border-transparent focus:ring-2 focus:ring-inset focus:ring-[var(--brand-blue)]" placeholder="Търсене на символ... (напр. AAPL)" data-lang-key="symbol_search_placeholder">
-                </div>
-                <div id="main-chart-container" class="h-[70vh] rounded-lg overflow-hidden border border-[var(--dark-separator)]"></div>
-            </div>
-        </section>
+                    <div id="tradingview-widget-container" class="h-[65vh] bg-secondary rounded-xl shadow-md"></div>
+                </section>
 
-        <!-- News Section -->
-        <section id="news-section" class="content-section">
-            <div class="mx-auto max-w-7xl px-4">
-                <div class="flex justify-between items-center mb-4">
-                    <h1 class="text-3xl font-bold tracking-tight" data-lang-key="news_title">Финансови Новини</h1>
-                    <!-- Filters could go here -->
-                </div>
-                <div id="news-feed-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- News cards will be injected here -->
-                </div>
-            </div>
-        </section>
+                <section id="news-section" class="app-section hidden">
+                    <h2 class="text-3xl font-bold text-primary mb-6" data-i18n-key="section_title_news">Market News</h2>
+                    <div id="tradingview-news-widget-container" class="h-[75vh]"></div>
+                </section>
 
-        <!-- Education Section -->
-        <section id="education-section" class="content-section">
-            <div class="mx-auto max-w-7xl px-4">
-                 <div class="text-center mb-12">
-                    <h1 class="text-4xl font-extrabold tracking-tight" data-lang-key="education_title">Център за Знания</h1>
-                    <p class="mt-4 max-w-2xl mx-auto text-[var(--dark-text-secondary)]" data-lang-key="education_subtitle">Вашият път към финансово майсторство, от основите до професионалните стратегии.</p>
-                </div>
-                <div id="education-levels-container" class="space-y-12">
-                    <!-- Education levels and courses will be injected here -->
-                </div>
+                <section id="education-section" class="app-section hidden">
+                    <h2 class="text-3xl font-bold text-primary mb-6" data-i18n-key="section_title_education">Education</h2>
+                    <div class="text-center p-12 bg-secondary rounded-xl">
+                        <i class="fas fa-graduation-cap text-5xl text-secondary mb-4"></i>
+                        <p class="text-xl text-secondary" data-i18n-key="education_placeholder">Educational content coming soon.</p>
+                    </div>
+                </section>
+                
+                <section id="portfolio-section" class="app-section hidden">
+                    <h2 class="text-3xl font-bold text-primary mb-6" data-i18n-key="section_title_portfolio">My Portfolio</h2>
+                    <div class="text-center p-12 bg-secondary rounded-xl">
+                        <i class="fas fa-construction text-5xl text-secondary mb-4"></i>
+                        <p class="text-xl text-secondary" data-i18n-key="portfolio_placeholder">Portfolio tracking coming soon.</p>
+                    </div>
+                </section>
+
+                <section id="api-section" class="app-section hidden">
+                    <h2 class="text-3xl font-bold text-primary mb-6" data-i18n-key="section_title_api">API Access</h2>
+                    <div class="text-center p-12 bg-secondary rounded-xl">
+                         <i class="fas fa-cogs text-5xl text-secondary mb-4"></i>
+                        <p class="text-xl text-secondary" data-i18n-key="api_placeholder">API documentation and keys will be available here.</p>
+                    </div>
+                </section>
             </div>
-        </section>
+            
+            <!-- Mobile Bottom Tab Bar -->
+            <nav id="mobile-nav" class="md:hidden grid grid-cols-5 gap-1 p-2 bg-secondary border-t border-custom">
+                <a href="#" class="nav-item flex flex-col items-center justify-center p-2 rounded-lg text-primary" data-section="charts">
+                    <i class="fas fa-chart-pie text-xl"></i><span class="text-xs mt-1" data-i18n-key="nav_charts">Charts</span>
+                </a>
+                <a href="#" class="nav-item flex flex-col items-center justify-center p-2 rounded-lg text-secondary" data-section="news">
+                    <i class="fas fa-newspaper text-xl"></i><span class="text-xs mt-1" data-i18n-key="nav_news">News</span>
+                </a>
+                <a href="#" class="nav-item flex flex-col items-center justify-center p-2 rounded-lg text-secondary" data-section="education">
+                    <i class="fas fa-book text-xl"></i><span class="text-xs mt-1" data-i18n-key="nav_education">Education</span>
+                </a>
+                <a href="#" class="nav-item flex flex-col items-center justify-center p-2 rounded-lg text-secondary" data-section="portfolio">
+                    <i class="fas fa-wallet text-xl"></i><span class="text-xs mt-1" data-i18n-key="nav_portfolio">Portfolio</span>
+                </a>
+                <a href="#" class="nav-item flex flex-col items-center justify-center p-2 rounded-lg text-secondary" data-section="api">
+                    <i class="fas fa-code text-xl"></i><span class="text-xs mt-1" data-i18n-key="nav_api">API</span>
+                </a>
+            </nav>
+        </main>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        // IMPORTANT: These imports are for modern browsers and bundlers
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+        import { 
+            getAuth, 
+            onAuthStateChanged,
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword,
+            signOut,
+            sendPasswordResetEmail,
+            sendEmailVerification
+        } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-auth.js";
+        import { 
+            getFirestore, 
+            doc, 
+            setDoc,
+            getDoc
+        } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
+
+        // --- Your Web App's Firebase Configuration ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBxblyR5pn6GjNSvvt2FfNPTL3AoGA24Kk",
+            authDomain: "opentrading-a35ed.firebaseapp.com",
+            projectId: "opentrading-a35ed",
+            storageBucket: "opentrading-a35ed.appspot.com",
+            messagingSenderId: "190093706465",
+            appId: "1:190093706465:web:8f8d9ede244e4c448fe3a0",
+            measurementId: "G-3PCYZPGF73"
+        };
         
-    </main>
-    
-    <!-- Mobile Bottom Nav -->
-    <nav id="mobile-nav" class="lg:hidden glass-header fixed bottom-0 left-0 right-0 z-50 border-t">
-        <div class="flex justify-around items-center h-16">
-            <button class="nav-item flex flex-col items-center justify-center space-y-1 w-full" data-section="charts">
-                <span class="text-2xl">📈</span>
-                <span class="text-xs font-medium" data-lang-key="nav_charts">Графики</span>
-            </button>
-            <button class="nav-item flex flex-col items-center justify-center space-y-1 w-full" data-section="news">
-                <span class="text-2xl">📰</span>
-                <span class="text-xs font-medium" data-lang-key="nav_news">Новини</span>
-            </button>
-            <button class="nav-item flex flex-col items-center justify-center space-y-1 w-full" data-section="education">
-                <span class="text-2xl">🎓</span>
-                <span class="text-xs font-medium" data-lang-key="nav_education">Обучение</span>
-            </button>
-        </div>
-    </nav>
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // --- 1. APPLICATION STATE & DATA ---
-        const app = {
-            state: {
-                currentSection: 'charts',
-                currentSymbol: 'AAPL',
-                isDarkMode: true,
-                currentLang: 'bg',
-            },
-            
-            // --- DATA: Language Content ---
-            content: {
-                bg: {
-                    title: "OpenTrading - Платформа от Световна Класа", logo: "OPENTRADING",
-                    nav_charts: "Графики", nav_news: "Новини", nav_education: "Обучение",
-                    charts_title: "Пазари", symbol_search_placeholder: "Търсене на символ... (напр. AAPL)",
-                    news_title: "Финансови Новини",
-                    education_title: "Център за Знания", education_subtitle: "Вашият път към финансово майсторство, от основите до професионалните стратегии.",
-                    edu_beginner_title: "Ниво 1: Основи", edu_beginner_desc: "Изградете здрава основа с основни финансови познания. Идеално за начинаещи.",
-                    edu_intermediate_title: "Ниво 2: Анализ и Стратегия", edu_intermediate_desc: "Научете се да анализирате пазарите и да изграждате първите си стратегии.",
-                    edu_advanced_title: "Ниво 3: Професионални Техники", edu_advanced_desc: "Овладейте сложни инструменти и количествени подходи за сериозни трейдъри.",
-                },
-                en: {
-                    title: "OpenTrading - World Class Platform", logo: "OPENTRADING",
-                    nav_charts: "Charts", nav_news: "News", nav_education: "Education",
-                    charts_title: "Markets", symbol_search_placeholder: "Search for a symbol... (e.g. AAPL)",
-                    news_title: "Financial News",
-                    education_title: "Knowledge Center", education_subtitle: "Your path to financial mastery, from the basics to professional strategies.",
-                    edu_beginner_title: "Level 1: Foundations", edu_beginner_desc: "Build a solid foundation with essential financial literacy. Perfect for beginners.",
-                    edu_intermediate_title: "Level 2: Analysis & Strategy", edu_intermediate_desc: "Learn to analyze the markets and build your first trading strategies.",
-                    edu_advanced_title: "Level 3: Professional Techniques", edu_advanced_desc: "Master complex instruments and quantitative approaches for serious traders.",
-                },
-                es: {
-                    title: "OpenTrading - Plataforma de Clase Mundial", logo: "OPENTRADING",
-                    nav_charts: "Gráficos", nav_news: "Noticias", nav_education: "Educación",
-                    charts_title: "Mercados", symbol_search_placeholder: "Buscar un símbolo... (ej. AAPL)",
-                    news_title: "Noticias Financieras",
-                    education_title: "Centro de Conocimiento", education_subtitle: "Su camino hacia la maestría financiera, desde lo básico hasta estrategias profesionales.",
-                    edu_beginner_title: "Nivel 1: Fundamentos", edu_beginner_desc: "Construya una base sólida con conocimientos financieros esenciales. Perfecto para principiantes.",
-                    edu_intermediate_title: "Nivel 2: Análisis y Estrategia", edu_intermediate_desc: "Aprenda a analizar los mercados y a construir sus primeras estrategias de trading.",
-                    edu_advanced_title: "Nivel 3: Técnicas Profesionales", edu_advanced_desc: "Domine instrumentos complejos y enfoques cuantitativos para traders serios.",
-                },
-            },
-
-            // --- DATA: Education Content (Structure) ---
-            educationData: [
-                { id: 'beginner', titleKey: 'edu_beginner_title', descKey: 'edu_beginner_desc', color: 'var(--brand-teal)', courses: [
-                    { title: "Какво е акция?", progress: 100 }, { title: "Бюджетиране 101", progress: 60 }, { title: "Разбиране на ETF", progress: 20 }
-                ]},
-                { id: 'intermediate', titleKey: 'edu_intermediate_title', descKey: 'edu_intermediate_desc', color: 'var(--brand-blue)', courses: [
-                    { title: "Въведение в Техническия Анализ", progress: 75 }, { title: "Основни Опционни Стратегии", progress: 40 }, { title: "Управление на риска", progress: 0 }
-                ]},
-                { id: 'advanced', titleKey: 'edu_advanced_title', descKey: 'edu_advanced_desc', color: 'var(--brand-orange)', courses: [
-                    { title: "Стратегии със Спредове", progress: 15 }, { title: "Количествен анализ", progress: 0 }, { title: "Алгоритмична търговия", progress: 0 }
-                ]}
-            ],
-            
-             // --- DATA: News Feed (Dummy) ---
-            newsData: [
-                { sentiment: 'positive', source: 'Reuters', headline: 'Apple Inc. reports record-breaking quarterly earnings, shares surge.' },
-                { sentiment: 'negative', source: 'Bloomberg', headline: 'Federal Reserve hints at earlier-than-expected interest rate hikes, markets tumble.' },
-                { sentiment: 'neutral', source: 'Dow Jones', headline: 'Crude oil prices stabilize after a week of high volatility.' },
-                { sentiment: 'positive', source: 'Reuters', headline: 'Tesla announces new battery technology, potentially doubling vehicle range.' },
-                { sentiment: 'negative', source: 'Associated Press', headline: 'Global supply chain issues expected to continue through Q4, impacting consumer goods.' },
-                { sentiment: 'neutral', source: 'Financial Times', headline: 'European Central Bank maintains its current monetary policy stance.' }
-            ],
-
-            // --- DATA: Available Languages ---
-            languages: {
-                bg: "Български", en: "English", es: "Español", de: "Deutsch", fr: "Français", 
-                ru: "Русский", zh: "中文 (Mandarin)", hi: "हिन्दी (Hindi)", ar: "العربية (Arabic)", pt: "Português"
-            }
+        // --- App State & DOM Elements ---
+        const state = {
+            isDarkMode: true,
+            currentLang: 'en',
+            currentUser: null,
+            currentSection: 'charts',
+            registrationData: {},
         };
 
-        // --- 2. DOM ELEMENT REFERENCES ---
         const dom = {
+            authContainer: document.getElementById('auth-container'),
+            mainAppContainer: document.getElementById('main-app-container'),
+            verifyEmailContainer: document.getElementById('verify-email-container'),
+            loginView: document.getElementById('login-view'),
+            forgotPasswordView: document.getElementById('forgot-password-view'),
+            registerModal: document.getElementById('register-modal'),
+            
+            loginForm: document.getElementById('login-form'),
+            loginError: document.getElementById('login-error'),
+            forgotPasswordForm: document.getElementById('forgot-password-form'),
+            resetError: document.getElementById('reset-error'),
+            resetSuccess: document.getElementById('reset-success'),
+
+            registerForms: {
+                step1: document.getElementById('register-form-step1'),
+                step2: document.getElementById('register-form-step2'),
+                step3: document.getElementById('register-form-step3'),
+            },
+            registerErrors: {
+                step1: document.getElementById('register-step1-error'),
+                step2: document.getElementById('register-step2-error'),
+                step3: document.getElementById('register-step3-error'),
+            },
+            
             navItems: document.querySelectorAll('.nav-item'),
-            contentSections: document.querySelectorAll('.content-section'),
-            themeToggle: document.getElementById('theme-toggle'),
-            symbolSearchInput: document.getElementById('symbol-search'),
+            appSections: document.querySelectorAll('.app-section'),
+            themeToggles: [document.getElementById('theme-toggle-desktop'), document.getElementById('theme-toggle-mobile')],
             langSwitcher: document.getElementById('lang-switcher'),
             langDropdown: document.getElementById('lang-dropdown'),
             currentLangText: document.getElementById('current-lang-text'),
-            educationContainer: document.getElementById('education-levels-container'),
-            newsFeedContainer: document.getElementById('news-feed-container'),
+            symbolSearchInput: document.getElementById('symbol-search-input'),
+
+            userAvatar: document.getElementById('user-avatar'),
+            userFullname: document.getElementById('user-fullname'),
+            userEmail: document.getElementById('user-email'),
+
+            // Verification screen elements
+            verificationEmailSpan: document.getElementById('verification-email-span'),
+            resendVerificationButton: document.getElementById('resend-verification-button'),
+            checkVerificationButton: document.getElementById('check-verification-button'),
+            logoutFromVerifyButton: document.getElementById('logout-from-verify-button'),
+            resendStatus: document.getElementById('resend-status'),
         };
 
-        // --- 3. CORE FUNCTIONS ---
-        const updateLanguage = () => {
-            const lang = app.state.currentLang;
-            const langPack = app.content[lang] || app.content.en;
+        // --- Internationalization (i18n) ---
+        const i18nData = {
+            en: {
+                login_welcome_title: "Welcome to OpenTrading",
+                login_welcome_subtitle: "Sign in to access your portfolio.",
+                email_label: "Email",
+                password_label: "Password",
+                login_button: "Sign In",
+                forgot_password_link: "Forgot Password?",
+                no_account_prompt: "Don't have an account?",
+                register_link: "Register",
+                reset_password_title: "Reset Password",
+                reset_password_instructions: "Enter your email and we'll send you a link to get back into your account.",
+                send_reset_link_button: "Send Reset Link",
+                back_to_login_link: "Back to Login",
+                register_step1_title: "Create Account (Step 1/3)",
+                register_step1_subtitle: "Start with your credentials.",
+                confirm_password_label: "Confirm Password",
+                password_strength_prompt: "Minimum 6 characters.",
+                next_button: "Next",
+                register_step2_title: "Personal Details (Step 2/3)",
+                register_step2_subtitle: "Required for account verification.",
+                fullname_label: "Full Name",
+                username_label: "Username",
+                back_button: "Back",
+                register_step3_title: "Final Step (Step 3/3)",
+                register_step3_subtitle: "Please review and accept our terms.",
+                agree_to_terms_prompt: "I agree to the",
+                age_confirm_prompt: "I confirm I am 18 years of age or older.",
+                create_account_button: "Create Account",
+                nav_charts: "Charts",
+                nav_news: "News",
+                nav_education: "Education",
+                nav_portfolio: "Portfolio",
+                nav_api: "API",
+                section_title_charts: "Charts",
+                search_symbol_placeholder: "Search symbol e.g., AAPL",
+                section_title_news: "Market News",
+                section_title_education: "Education",
+                education_placeholder: "Educational content coming soon.",
+                section_title_portfolio: "My Portfolio",
+                portfolio_placeholder: "Portfolio tracking coming soon.",
+                section_title_api: "API Access",
+                api_placeholder: "API documentation and keys will be available here.",
+                verify_email_title: "Verify Your Email",
+                verify_email_instructions_part1: "A verification link has been sent to",
+                verify_email_instructions_part2: ". Please check your inbox and click the link to activate your account.",
+                resend_email_button: "Resend Verification Email",
+                check_verification_button: "I've Verified, Continue",
+                wrong_account_prompt: "Wrong account?",
+                logout_button: "Logout",
+                // Error messages
+                error_password_mismatch: "Passwords do not match. Please re-enter.",
+                error_email_in_use: "This email is already registered. Please log in or use a different one.",
+                error_weak_password: "Password is too weak. It must be at least 6 characters long.",
+                error_invalid_email: "The email address is not valid.",
+                error_generic_register: "An unexpected error occurred. Please try again.",
+                error_wrong_password: "Incorrect password. Please try again.",
+                error_user_not_found: "No account found with this email. Please register.",
+                error_generic_login: "Login failed. Please check your credentials and try again."
+            },
+            bg: {
+                login_welcome_title: "Добре дошли в OpenTrading",
+                login_welcome_subtitle: "Влезте, за да достъпите портфолиото си.",
+                email_label: "Имейл",
+                password_label: "Парола",
+                login_button: "Вход",
+                forgot_password_link: "Забравена парола?",
+                no_account_prompt: "Нямате акаунт?",
+                register_link: "Регистрация",
+                reset_password_title: "Нулиране на парола",
+                reset_password_instructions: "Въведете имейла си и ще ви изпратим линк за възстановяване.",
+                send_reset_link_button: "Изпрати линк",
+                back_to_login_link: "Назад към входа",
+                register_step1_title: "Създай акаунт (Стъпка 1/3)",
+                register_step1_subtitle: "Започнете с данните за вход.",
+                confirm_password_label: "Потвърди парола",
+                password_strength_prompt: "Минимум 6 символа.",
+                next_button: "Напред",
+                register_step2_title: "Лични данни (Стъпка 2/3)",
+                register_step2_subtitle: "Нужни за верификация на акаунта.",
+                fullname_label: "Пълно име",
+                username_label: "Потребителско име",
+                back_button: "Назад",
+                register_step3_title: "Финална стъпка (Стъпка 3/3)",
+                register_step3_subtitle: "Моля, прегледайте и приемете условията.",
+                agree_to_terms_prompt: "Съгласен съм с",
+                age_confirm_prompt: "Потвърждавам, че имам навършени 18 години.",
+                create_account_button: "Създай акаунт",
+                nav_charts: "Графики",
+                nav_news: "Новини",
+                nav_education: "Обучение",
+                nav_portfolio: "Портфолио",
+                nav_api: "API",
+                section_title_charts: "Графики",
+                search_symbol_placeholder: "Търси символ, напр. AAPL",
+                section_title_news: "Пазарни новини",
+                section_title_education: "Обучение",
+                education_placeholder: "Образователно съдържание очаквайте скоро.",
+                section_title_portfolio: "Моето портфолио",
+                portfolio_placeholder: "Проследяване на портфолио очаквайте скоро.",
+                section_title_api: "API Достъп",
+                api_placeholder: "API документация и ключове ще бъдат достъпни тук.",
+                verify_email_title: "Потвърдете имейла си",
+                verify_email_instructions_part1: "Изпратен е линк за потвърждение на",
+                verify_email_instructions_part2: ". Моля, проверете пощата си и кликнете на линка, за да активирате акаунта си.",
+                resend_email_button: "Изпрати отново",
+                check_verification_button: "Потвърдих, Продължи",
+                wrong_account_prompt: "Грешен акаунт?",
+                logout_button: "Изход",
+                // Error messages
+                error_password_mismatch: "Паролите не съвпадат. Моля, въведете ги отново.",
+                error_email_in_use: "Този имейл вече е регистриран. Моля, влезте в системата или използвайте друг.",
+                error_weak_password: "Паролата е твърде слаба. Трябва да е поне 6 символа.",
+                error_invalid_email: "Имейл адресът не е валиден.",
+                error_generic_register: "Възникна неочаквана грешка. Моля, опитайте отново.",
+                error_wrong_password: "Грешна парола. Моля, опитайте отново.",
+                error_user_not_found: "Няма акаунт с този имейл. Моля, регистрирайте се.",
+                error_generic_login: "Грешка при вход. Проверете данните си и опитайте отново."
+            }
+        };
 
-            document.querySelectorAll('[data-lang-key]').forEach(el => {
-                const key = el.dataset.langKey;
-                if (langPack[key]) {
-                    if (el.placeholder) {
-                        el.placeholder = langPack[key];
+        const availableLanguages = {
+            en: 'English',
+            bg: 'Български'
+        };
+        
+        const getTranslatedText = (key) => {
+            return i18nData[state.currentLang]?.[key] || i18nData.en[key];
+        }
+
+        const updateLanguage = () => {
+            const lang = state.currentLang;
+            
+            document.documentElement.lang = lang;
+            dom.currentLangText.textContent = availableLanguages[lang];
+
+            document.querySelectorAll('[data-i18n-key]').forEach(el => {
+                const key = el.dataset.i18nKey;
+                const translation = getTranslatedText(key);
+                if (translation) {
+                    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                        el.placeholder = translation;
                     } else {
-                        el.textContent = langPack[key];
+                        el.innerHTML = translation;
                     }
                 }
             });
-            document.documentElement.lang = lang;
-            document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
-            dom.currentLangText.textContent = app.languages[lang];
-            
-            // Re-render dynamic content
-            populateEducation();
-            populateNews();
-            loadTradingViewWidgets();
-        };
 
-        const switchSection = (sectionId) => {
-            app.state.currentSection = sectionId;
-            dom.navItems.forEach(nav => {
-                nav.classList.toggle('text-[var(--brand-blue)]', nav.dataset.section === sectionId);
-                nav.classList.toggle('text-[var(--dark-text-secondary)]', nav.dataset.section !== sectionId);
-                 if(document.body.classList.contains('light-mode')) {
-                     nav.classList.toggle('text-[var(--brand-blue)]', nav.dataset.section === sectionId);
-                     nav.classList.toggle('text-gray-500', nav.dataset.section !== sectionId);
-                 }
-            });
-            dom.contentSections.forEach(section => {
-                section.classList.toggle('active', section.id.startsWith(sectionId));
-            });
-            loadTradingViewWidgets();
-        };
-
-        const toggleTheme = () => {
-            app.state.isDarkMode = !app.state.isDarkMode;
-            document.body.classList.toggle('light-mode', !app.state.isDarkMode);
-            document.body.classList.toggle('dark-mode', app.state.isDarkMode);
-            localStorage.setItem('theme', app.state.isDarkMode ? 'dark' : 'light');
-            loadTradingViewWidgets();
-        };
-        
-        const handleSymbolSearch = (e) => {
-             if (e.key === 'Enter' && e.target.value.trim() !== '') {
-                app.state.currentSymbol = e.target.value.trim().toUpperCase();
-                e.target.value = '';
-                if(app.state.currentSection === 'charts') {
-                    loadTradingViewWidgets();
-                }
+            if (state.currentUser && state.currentUser.emailVerified) {
+                createTradingViewWidget('TVC:SPX', lang);
+                createNewsWidget(lang);
             }
-        };
-
-        // --- 4. WIDGET & DYNAMIC CONTENT FUNCTIONS ---
-        const destroyElementChildren = (elementId) => {
-            const el = document.getElementById(elementId);
-            if(el) el.innerHTML = '';
-        }
-
-        const loadTradingViewWidgets = () => {
-            if (app.state.currentSection === 'charts') {
-                 destroyElementChildren('main-chart-container');
-                 new TradingView.widget({
-                    autosize: true, symbol: app.state.currentSymbol, interval: "D", timezone: "Etc/UTC",
-                    theme: app.state.isDarkMode ? "dark" : "light", style: "1", locale: app.state.currentLang,
-                    toolbar_bg: app.state.isDarkMode ? "#161b22" : "#FFFFFF", enable_publishing: false,
-                    hide_side_toolbar: false, allow_symbol_change: false, details: true, hotlist: true, calendar: true,
-                    container_id: "main-chart-container"
-                });
-            }
-        };
-
-        const populateEducation = () => {
-            dom.educationContainer.innerHTML = '';
-            const langPack = app.content[app.state.currentLang] || app.content.en;
-            app.educationData.forEach(level => {
-                const levelEl = document.createElement('div');
-                let coursesHtml = level.courses.map(course => `
-                    <div class="p-4 rounded-lg bg-black/20">
-                        <div class="flex justify-between items-center mb-1">
-                            <h4 class="font-semibold text-sm">${course.title}</h4>
-                            <span class="text-xs font-mono text-gray-400">${course.progress}%</span>
-                        </div>
-                        <div class="w-full bg-gray-700 rounded-full h-1.5">
-                            <div class="progress-bar-inner bg-white rounded-full h-1.5" style="width: ${course.progress}%"></div>
-                        </div>
-                    </div>
-                `).join('');
-
-                levelEl.innerHTML = `
-                    <div class="p-6 rounded-xl" style="background-color: ${level.color}; color: white;">
-                        <h2 class="text-2xl font-bold">${langPack[level.titleKey]}</h2>
-                        <p class="mt-2 text-white/80">${langPack[level.descKey]}</p>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">${coursesHtml}</div>
-                `;
-                dom.educationContainer.appendChild(levelEl);
-            });
-        };
-        
-        const populateNews = () => {
-            dom.newsFeedContainer.innerHTML = '';
-            const sentimentStyles = {
-                positive: 'bg-green-500',
-                negative: 'bg-red-500',
-                neutral: 'bg-gray-500'
-            };
-            app.newsData.forEach(item => {
-                const card = `
-                    <div class="bg-[var(--dark-card-bg)] border border-[var(--dark-separator)] rounded-lg p-5 flex flex-col">
-                        <div class="flex items-center mb-3">
-                            <span class="w-3 h-3 rounded-full ${sentimentStyles[item.sentiment]} mr-2"></span>
-                            <span class="text-xs font-bold uppercase tracking-wider text-gray-400">${item.source}</span>
-                        </div>
-                        <h3 class="font-semibold flex-grow">${item.headline}</h3>
-                    </div>`;
-                dom.newsFeedContainer.innerHTML += card;
-            });
         };
         
         const populateLanguageDropdown = () => {
             dom.langDropdown.innerHTML = '';
-            for(const [code, name] of Object.entries(app.languages)) {
+            for (const [code, name] of Object.entries(availableLanguages)) {
                 const langItem = document.createElement('a');
                 langItem.href = '#';
-                langItem.dataset.langCode = code;
-                langItem.className = 'block px-4 py-2 text-sm text-[var(--dark-text-secondary)] hover:bg-gray-700 hover:text-white';
+                langItem.className = 'block px-4 py-2 text-sm text-primary hover:bg-tertiary';
                 langItem.textContent = name;
+                langItem.dataset.langCode = code;
                 langItem.addEventListener('click', (e) => {
                     e.preventDefault();
-                    app.state.currentLang = code;
+                    state.currentLang = code;
                     updateLanguage();
                     dom.langDropdown.classList.add('hidden');
                 });
@@ -412,37 +639,352 @@
             }
         };
 
+        // --- Theme Management ---
+        const toggleTheme = (e) => {
+            state.isDarkMode = !e.target.checked;
+            localStorage.setItem('theme', state.isDarkMode ? 'dark' : 'light');
+            applyTheme();
 
-        // --- 5. INITIALIZATION & EVENT LISTENERS ---
-        const init = () => {
-            // Restore theme from localStorage
-            const savedTheme = localStorage.getItem('theme');
-            app.state.isDarkMode = savedTheme === 'dark' || savedTheme === null;
-            dom.themeToggle.checked = app.state.isDarkMode;
-            toggleTheme(); // Apply initial theme correctly
+            if(state.currentUser && state.currentUser.emailVerified) {
+               createTradingViewWidget(dom.symbolSearchInput.value || 'TVC:SPX', state.currentLang);
+               createNewsWidget(state.currentLang);
+            }
+        };
 
-            dom.navItems.forEach(item => item.addEventListener('click', () => switchSection(item.dataset.section)));
-            dom.themeToggle.addEventListener('change', toggleTheme);
-            dom.symbolSearchInput.addEventListener('keydown', handleSymbolSearch);
+        const applyTheme = () => {
+            document.body.classList.toggle('dark-mode', state.isDarkMode);
+            document.body.classList.toggle('light-mode', !state.isDarkMode);
+            dom.themeToggles.forEach(toggle => toggle.checked = !state.isDarkMode);
+        };
+
+        // --- UI & View Management ---
+        const switchSection = (sectionId) => {
+            state.currentSection = sectionId;
+            dom.appSections.forEach(section => section.classList.toggle('hidden', section.id !== `${sectionId}-section`));
+            dom.navItems.forEach(item => {
+                const is_active = item.dataset.section === sectionId;
+                item.classList.toggle('text-primary', is_active);
+                item.classList.toggle('text-secondary', !is_active);
+                if(is_active) item.classList.add('bg-tertiary');
+                else item.classList.remove('bg-tertiary');
+            });
+        };
+        
+        const showView = (viewId) => {
+            dom.loginView.classList.toggle('hidden', viewId !== 'login');
+            dom.forgotPasswordView.classList.toggle('hidden', viewId !== 'forgot-password');
+            if (viewId === 'register') {
+                dom.registerModal.classList.remove('hidden');
+                switchRegisterStep(1);
+            } else {
+                dom.registerModal.classList.add('hidden');
+            }
+        };
+
+        const switchRegisterStep = (step) => {
+            document.querySelectorAll('.step-content').forEach(s => s.classList.remove('active'));
+            document.getElementById(`register-step-${step}`).classList.add('active');
+        };
+
+        // --- TradingView Widgets ---
+        const createTradingViewWidget = (symbol, lang) => {
+            const container = document.getElementById('tradingview-widget-container');
+            if(!container) return;
+            container.innerHTML = '';
+            new TradingView.widget({
+                "autosize": true,
+                "symbol": symbol,
+                "interval": "D",
+                "timezone": "Etc/UTC",
+                "theme": state.isDarkMode ? "dark" : "light",
+                "style": "1",
+                "locale": lang,
+                "toolbar_bg": state.isDarkMode ? "#1c1c1e" : "#ffffff",
+                "enable_publishing": false,
+                "hide_side_toolbar": false,
+                "allow_symbol_change": true,
+                "container_id": "tradingview-widget-container"
+            });
+        };
+
+        const createNewsWidget = (lang) => {
+            const container = document.getElementById('tradingview-news-widget-container');
+            if(!container) return;
+            container.innerHTML = '';
+            new TradingView.News({
+                "feedMode": "all_symbols",
+                "colorTheme": state.isDarkMode ? "dark" : "light",
+                "locale": lang,
+                "width": "100%",
+                "height": "100%",
+            }, container);
+        };
+
+        const handleSymbolSearch = (e) => {
+            if (e.key === 'Enter' && e.target.value) {
+                createTradingViewWidget(e.target.value.toUpperCase(), state.currentLang);
+                e.target.blur();
+            }
+        };
+
+        // --- Authentication Logic ---
+        const handleLogin = async (e) => {
+            e.preventDefault();
+            const email = e.target.elements['login-email'].value;
+            const password = e.target.elements['login-password'].value;
+            const button = e.target.querySelector('button');
             
-            // Language Switcher Logic
+            dom.loginError.textContent = '';
+            button.disabled = true;
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                console.error("Login Error:", error.code, error.message);
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                        dom.loginError.textContent = getTranslatedText('error_user_not_found');
+                        break;
+                    case 'auth/wrong-password':
+                        dom.loginError.textContent = getTranslatedText('error_wrong_password');
+                        break;
+                    default:
+                        dom.loginError.textContent = getTranslatedText('error_generic_login');
+                        break;
+                }
+            } finally {
+                 button.disabled = false;
+            }
+        };
+
+        const handlePasswordReset = async (e) => {
+            e.preventDefault();
+            const email = e.target.elements['reset-email'].value;
+            dom.resetError.textContent = '';
+            dom.resetSuccess.textContent = '';
+
+            try {
+                await sendPasswordResetEmail(auth, email);
+                dom.resetSuccess.textContent = 'Reset link sent! Check your inbox.';
+            } catch (error) {
+                dom.resetError.textContent = 'Could not send reset link. Please check the email.';
+            }
+        };
+        
+        const handleRegistration = async () => {
+            const button = dom.registerForms.step3.querySelector('button[type="submit"]');
+            button.disabled = true;
+            dom.registerErrors.step3.textContent = '';
+
+            const { email, password, fullName, username } = state.registrationData;
+            
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                await sendEmailVerification(user);
+
+                await setDoc(doc(db, "users", user.uid), {
+                    uid: user.uid,
+                    email: user.email,
+                    fullName: fullName,
+                    username: username,
+                    createdAt: new Date()
+                });
+
+            } catch(error) {
+                console.error("Registration Error:", error.code, error.message);
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        dom.registerErrors.step3.textContent = getTranslatedText('error_email_in_use');
+                        break;
+                    case 'auth/weak-password':
+                        dom.registerErrors.step3.textContent = getTranslatedText('error_weak_password');
+                        break;
+                    case 'auth/invalid-email':
+                        dom.registerErrors.step3.textContent = getTranslatedText('error_invalid_email');
+                        break;
+                    default:
+                        dom.registerErrors.step3.textContent = getTranslatedText('error_generic_register');
+                        break;
+                }
+            } finally {
+                button.disabled = false;
+            }
+        };
+
+        const handleLogout = () => {
+            signOut(auth);
+        };
+        
+        const updateUserInfo = (user, userData) => {
+            state.currentUser = { ...user, ...userData };
+            
+            const initials = userData.fullName?.split(' ').map(n => n[0]).join('').toUpperCase() || '...';
+            dom.userAvatar.textContent = initials;
+            dom.userFullname.textContent = userData.fullName || 'User';
+            dom.userEmail.textContent = user.email;
+        };
+        
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                await user.reload();
+                const refreshedUser = auth.currentUser;
+
+                if (refreshedUser.emailVerified) {
+                    dom.authContainer.classList.add('hidden');
+                    dom.verifyEmailContainer.classList.add('hidden');
+                    dom.mainAppContainer.classList.remove('hidden');
+                    dom.registerModal.classList.add('hidden');
+
+                    const userDocRef = doc(db, "users", refreshedUser.uid);
+                    const userDocSnap = await getDoc(userDocRef);
+
+                    if (userDocSnap.exists()) {
+                        updateUserInfo(refreshedUser, userDocSnap.data());
+                    } else {
+                        console.warn("User data not found in Firestore for UID:", refreshedUser.uid);
+                        updateUserInfo(refreshedUser, { fullName: "New User", email: refreshedUser.email });
+                    }
+                    updateLanguage();
+                    switchSection('charts');
+                } else {
+                    dom.authContainer.classList.add('hidden');
+                    dom.mainAppContainer.classList.add('hidden');
+                    dom.registerModal.classList.add('hidden');
+                    dom.verifyEmailContainer.classList.remove('hidden');
+                    dom.verificationEmailSpan.textContent = refreshedUser.email;
+                }
+            } else {
+                dom.authContainer.classList.remove('hidden');
+                dom.mainAppContainer.classList.add('hidden');
+                dom.verifyEmailContainer.classList.add('hidden');
+                state.currentUser = null;
+                showView('login');
+            }
+        });
+
+        // --- Event Listeners ---
+        const setupEventListeners = () => {
+            dom.themeToggles.forEach(toggle => toggle.addEventListener('change', toggleTheme));
+            dom.navItems.forEach(item => item.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchSection(item.dataset.section)
+            }));
+            dom.symbolSearchInput.addEventListener('keydown', handleSymbolSearch);
             dom.langSwitcher.addEventListener('click', (e) => {
                  e.stopPropagation();
                  dom.langDropdown.classList.toggle('hidden');
             });
             document.addEventListener('click', (e) => {
-                if (!dom.langSwitcher.contains(e.target)) {
-                    dom.langDropdown.classList.add('hidden');
+                if (!dom.langSwitcher.contains(e.target)) dom.langDropdown.classList.add('hidden');
+            });
+
+            document.getElementById('show-register-link').addEventListener('click', (e) => { e.preventDefault(); showView('register'); });
+            document.getElementById('close-register-modal').addEventListener('click', () => dom.registerModal.classList.add('hidden'));
+            document.getElementById('forgot-password-link').addEventListener('click', (e) => { e.preventDefault(); showView('forgot-password'); });
+            document.getElementById('back-to-login-link').addEventListener('click', (e) => { e.preventDefault(); showView('login'); });
+
+            dom.loginForm.addEventListener('submit', handleLogin);
+            dom.forgotPasswordForm.addEventListener('submit', handlePasswordReset);
+            
+            document.getElementById('logout-button').addEventListener('click', handleLogout);
+            document.getElementById('mobile-logout-button').addEventListener('click', handleLogout);
+            dom.logoutFromVerifyButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                signOut(auth);
+            });
+
+            dom.resendVerificationButton.addEventListener('click', async () => {
+                const button = dom.resendVerificationButton;
+                button.disabled = true;
+                dom.resendStatus.textContent = '';
+                
+                try {
+                    await sendEmailVerification(auth.currentUser);
+                    dom.resendStatus.textContent = 'Verification email sent!';
+                } catch (error) {
+                    dom.resendStatus.textContent = 'Error sending email. Please try again later.';
+                    console.error("Error resending verification email:", error);
+                } finally {
+                    setTimeout(() => { dom.resendStatus.textContent = ''; }, 5000);
+                    setTimeout(() => { button.disabled = false; }, 30000);
                 }
             });
 
-            populateLanguageDropdown();
-            updateLanguage();
-            switchSection('charts');
+            dom.checkVerificationButton.addEventListener('click', async () => {
+                if(auth.currentUser) {
+                    await auth.currentUser.reload();
+                    if(!auth.currentUser.emailVerified) {
+                        dom.resendStatus.textContent = 'Email not yet verified. Please check your inbox.';
+                        setTimeout(() => { dom.resendStatus.textContent = ''; }, 5000);
+                    }
+                }
+            });
+
+            dom.registerForms.step1.addEventListener('submit', (e) => {
+                e.preventDefault();
+                dom.registerErrors.step1.textContent = '';
+                const password = e.target.elements['register-password'].value;
+                const confirm = e.target.elements['register-confirm-password'].value;
+
+                if (password.length < 6) {
+                    dom.registerErrors.step1.textContent = getTranslatedText('error_weak_password');
+                    return;
+                }
+                if (password !== confirm) {
+                    dom.registerErrors.step1.textContent = getTranslatedText('error_password_mismatch');
+                    return;
+                }
+                state.registrationData.email = e.target.elements['register-email'].value;
+                state.registrationData.password = password;
+                switchRegisterStep(2);
+            });
+
+            dom.registerForms.step2.addEventListener('submit', (e) => {
+                e.preventDefault();
+                dom.registerErrors.step2.textContent = '';
+                const fullName = e.target.elements['register-fullname'].value;
+                const username = e.target.elements['register-username'].value;
+                if (!fullName || !username) {
+                    dom.registerErrors.step2.textContent = 'Please fill out all fields.';
+                    return;
+                }
+                state.registrationData.fullName = fullName;
+                state.registrationData.username = username;
+                switchRegisterStep(3);
+            });
+            
+            document.getElementById('register-back-step1').addEventListener('click', () => switchRegisterStep(1));
+            
+            dom.registerForms.step3.addEventListener('submit', (e) => {
+                e.preventDefault();
+                dom.registerErrors.step3.textContent = '';
+                const terms = e.target.elements['terms-agree'].checked;
+                const age = e.target.elements['age-confirm'].checked;
+                if (!terms || !age) {
+                    dom.registerErrors.step3.textContent = 'You must accept the terms and confirm your age.';
+                    return;
+                }
+                handleRegistration();
+            });
+
+            document.getElementById('register-back-step2').addEventListener('click', () => switchRegisterStep(2));
         };
 
-        init();
-    });
+        // --- App Initialization ---
+        const init = () => {
+            const savedTheme = localStorage.getItem('theme');
+            state.isDarkMode = savedTheme === 'dark' || savedTheme === null;
+            applyTheme();
+
+            populateLanguageDropdown();
+            updateLanguage(); 
+            setupEventListeners();
+        };
+
+        document.addEventListener('DOMContentLoaded', init);
+
     </script>
 </body>
 </html>
