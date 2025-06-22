@@ -5,18 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>OpenTrading - Professional Platform</title>
     
-    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts: Inter for iOS-like feel -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <!-- TradingView Charting Library -->
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 
     <style>
@@ -29,24 +25,28 @@
 
         /* --- Light Mode --- */
         .light-mode {
-            --bg-primary: #f0f2f5; /* Off-white like iOS settings */
-            --bg-secondary: #ffffff; /* Pure white for cards/modals */
-            --bg-tertiary: #e5e5ea; /* Lighter gray for inputs */
+            --bg-primary: #f0f2f5; 
+            --bg-secondary: #ffffff; 
+            --bg-tertiary: #e5e5ea; 
             --text-primary: #000000;
-            --text-secondary: #6b7280; /* Gray for subtitles */
+            --text-secondary: #6b7280; 
             --border-color: #d1d5db;
-            --accent-color: #007aff; /* Apple Blue */
+            --accent-color: #007aff; 
+            --buy-color: #26a69a;
+            --sell-color: #ef5350;
         }
 
         /* --- Dark Mode --- */
         .dark-mode {
-            --bg-primary: #000000; /* True black for OLED */
-            --bg-secondary: #1c1c1e; /* Dark gray for cards/modals */
-            --bg-tertiary: #2c2c2e; /* Even lighter gray for inputs */
+            --bg-primary: #000000; 
+            --bg-secondary: #1c1c1e; 
+            --bg-tertiary: #2c2c2e; 
             --text-primary: #ffffff;
-            --text-secondary: #a1a1aa; /* Lighter gray for subtitles */
+            --text-secondary: #a1a1aa; 
             --border-color: #3a3a3c;
-            --accent-color: #0a84ff; /* Lighter Apple Blue for dark mode */
+            --accent-color: #0a84ff;
+            --buy-color: #26a69a;
+            --sell-color: #ef5350;
         }
 
         .bg-primary { background-color: var(--bg-primary); }
@@ -58,6 +58,10 @@
         .accent-text { color: var(--accent-color); }
         .accent-bg { background-color: var(--accent-color); }
         .accent-border { border-color: var(--accent-color); }
+        .buy-text { color: var(--buy-color); }
+        .sell-text { color: var(--sell-color); }
+        .buy-bg { background-color: var(--buy-color); }
+        .sell-bg { background-color: var(--sell-color); }
 
         /* Custom scrollbar for a cleaner look */
         ::-webkit-scrollbar { width: 8px; }
@@ -67,41 +71,31 @@
 
         /* Hide spinner from number inputs */
         input[type='number']::-webkit-inner-spin-button,
-        input[type='number']::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        input[type='number'] {
-            -moz-appearance: textfield;
-        }
+        input[type='number']::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type='number'] { -moz-appearance: textfield; }
         
         /* Smooth transitions */
-        * {
-            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
-        }
+        * { transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out; }
 
-        /* For the registration modal steps */
-        .step-content {
-            display: none;
-        }
-        .step-content.active {
-            display: block;
-        }
+        .step-content, .charts-tab-content { display: none; }
+        .step-content.active, .charts-tab-content.active { display: block; }
+        
+        .status-connecting { background-color: #f39c12; color: #1e222d; }
+        .status-connected { background-color: var(--buy-color); color: white; }
+        .status-disconnected { background-color: var(--sell-color); color: white; }
+
     </style>
 </head>
 <body class="bg-primary text-primary antialiased">
 
-    <!-- ======== Authentication Container ======== -->
     <div id="auth-container" class="min-h-screen flex items-center justify-center p-4">
         <div class="w-full max-w-md">
-            <!-- Login View -->
             <div id="login-view" class="bg-secondary rounded-2xl shadow-lg p-8">
                 <div class="text-center mb-8">
                     <i class="fas fa-chart-line text-4xl accent-text"></i>
                     <h1 class="text-3xl font-bold text-primary mt-4" data-i18n-key="login_welcome_title">Welcome to OpenTrading</h1>
                     <p class="text-secondary" data-i18n-key="login_welcome_subtitle">Sign in to access your portfolio.</p>
                 </div>
-                
                 <form id="login-form">
                     <div class="mb-4">
                         <label for="login-email" class="block text-sm font-medium text-secondary" data-i18n-key="email_label">Email</label>
@@ -114,7 +108,6 @@
                     <p id="login-error" class="text-red-500 text-sm mb-4 h-5"></p>
                     <button type="submit" class="w-full accent-bg text-white font-bold py-3 px-4 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-wait" data-i18n-key="login_button">Sign In</button>
                 </form>
-
                 <div class="text-center mt-6">
                     <a href="#" id="forgot-password-link" class="text-sm accent-text hover:underline" data-i18n-key="forgot_password_link">Forgot Password?</a>
                 </div>
@@ -122,8 +115,6 @@
                     <p class="text-secondary"><span data-i18n-key="no_account_prompt">Don't have an account?</span> <a href="#" id="show-register-link" class="font-bold accent-text hover:underline" data-i18n-key="register_link">Register</a></p>
                 </div>
             </div>
-
-            <!-- Forgot Password View -->
             <div id="forgot-password-view" class="hidden bg-secondary rounded-2xl shadow-lg p-8">
                 <h2 class="text-2xl font-bold text-primary mb-2" data-i18n-key="reset_password_title">Reset Password</h2>
                 <p class="text-secondary mb-6" data-i18n-key="reset_password_instructions">Enter your email and we'll send you a link to get back into your account.</p>
@@ -143,7 +134,6 @@
         </div>
     </div>
     
-    <!-- ======== Verify Email Container ======== -->
     <div id="verify-email-container" class="hidden min-h-screen flex items-center justify-center p-4">
         <div class="w-full max-w-md bg-secondary rounded-2xl shadow-lg p-8 text-center">
             <i class="fas fa-envelope-open-text text-5xl accent-text mb-6"></i>
@@ -153,19 +143,15 @@
                 <strong id="verification-email-span" class="text-primary">your-email@example.com</strong>.
                 <span data-i18n-key="verify_email_instructions_part2"> Please check your inbox and click the link to activate your account.</span>
             </p>
-            
             <button id="resend-verification-button" class="w-full accent-bg text-white font-bold py-3 px-4 rounded-lg hover:opacity-90 transition-opacity mb-2" data-i18n-key="resend_email_button">Resend Verification Email</button>
             <p id="resend-status" class="text-green-500 text-sm mb-4 h-5"></p>
-            
             <button id="check-verification-button" class="w-full bg-tertiary text-primary font-bold py-3 px-4 rounded-lg hover:opacity-90 transition-opacity mb-6" data-i18n-key="check_verification_button">I've Verified, Continue</button>
-
             <p class="text-secondary text-sm"><span data-i18n-key="wrong_account_prompt">Wrong account?</span> 
                 <a href="#" id="logout-from-verify-button" class="font-bold accent-text hover:underline" data-i18n-key="logout_button">Logout</a>
             </p>
         </div>
     </div>
 
-    <!-- Registration Modal -->
     <div id="register-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4">
         <div class="bg-secondary rounded-2xl shadow-xl w-full max-w-md max-h-full overflow-y-auto">
             <div class="p-8 relative">
@@ -238,9 +224,7 @@
     </div>
 
 
-    <!-- ======== Main Application Container ======== -->
     <div id="main-app-container" class="hidden h-screen w-screen flex flex-col md:flex-row">
-        <!-- Sidebar Navigation (Desktop) -->
         <nav id="desktop-nav" class="hidden md:flex flex-col w-64 bg-secondary border-r border-custom p-4 space-y-2">
             <div class="px-4 py-2 mb-4">
                 <h1 class="text-2xl font-bold text-primary"><i class="fas fa-chart-line accent-text"></i> OpenTrading</h1>
@@ -261,19 +245,15 @@
                 <i class="fas fa-code w-6 text-center"></i><span data-i18n-key="nav_api">API</span>
             </a>
             <div class="flex-grow"></div>
-            <!-- Settings Controls -->
             <div class="space-y-4 p-4">
-                 <!-- Language Switcher -->
-                <div class="relative">
+                 <div class="relative">
                     <button id="lang-switcher" class="w-full flex justify-between items-center text-left bg-tertiary px-4 py-2 rounded-lg">
                         <span class="flex items-center"><i class="fas fa-globe mr-2"></i><span id="current-lang-text">English</span></span>
                         <i class="fas fa-chevron-down text-xs"></i>
                     </button>
                     <div id="lang-dropdown" class="hidden absolute bottom-full mb-2 w-full bg-secondary border border-custom rounded-lg shadow-lg z-20">
-                        <!-- Languages populated by JS -->
-                    </div>
+                        </div>
                 </div>
-                <!-- Theme Toggle -->
                 <div class="flex items-center justify-between bg-tertiary px-4 py-2 rounded-lg">
                     <span class="text-secondary"><i class="fas fa-sun"></i></span>
                     <label for="theme-toggle-desktop" class="relative inline-flex items-center cursor-pointer">
@@ -283,8 +263,7 @@
                     <span class="text-secondary"><i class="fas fa-moon"></i></span>
                 </div>
             </div>
-             <!-- User Profile Section -->
-            <div id="user-profile-section" class="border-t border-custom pt-4">
+             <div id="user-profile-section" class="border-t border-custom pt-4">
                 <div class="flex items-center space-x-3">
                     <div class="w-10 h-10 rounded-full accent-bg flex items-center justify-center text-white font-bold text-lg" id="user-avatar"></div>
                     <div class="flex-1 overflow-hidden">
@@ -298,9 +277,7 @@
             </div>
         </nav>
 
-        <!-- Main Content -->
         <main class="flex-1 flex flex-col overflow-hidden">
-            <!-- Mobile Header -->
             <header class="md:hidden flex items-center justify-between p-4 bg-secondary border-b border-custom">
                 <h1 class="text-xl font-bold text-primary"><i class="fas fa-chart-line accent-text"></i> OpenTrading</h1>
                  <div class="flex items-center space-x-4">
@@ -312,17 +289,172 @@
                 </div>
             </header>
 
-            <!-- App Sections -->
-            <div class="flex-1 overflow-y-auto p-4 md:p-8">
+            <div class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
                 <section id="charts-section" class="app-section">
-                    <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6">
-                        <h2 class="text-3xl font-bold text-primary mb-2 md:mb-0" data-i18n-key="section_title_charts">Charts</h2>
-                        <div class="relative w-full md:w-64">
-                             <input type="text" id="symbol-search-input" placeholder="Search symbol e.g., AAPL" data-i18n-key="search_symbol_placeholder" class="w-full bg-tertiary border-transparent rounded-lg px-4 py-2 text-primary focus:outline-none focus:ring-2 focus:ring-blue-500">
-                             <i class="fas fa-search absolute right-4 top-1/2 -translate-y-1/2 text-secondary"></i>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+
+                        <div class="lg:col-span-1 xl:col-span-1 flex flex-col space-y-6">
+                            <div class="bg-secondary rounded-xl shadow-md p-4">
+                                <h3 class="text-lg font-semibold text-primary mb-3" data-i18n-key="paper_balance_title">Available Balance</h3>
+                                <div id="balance-display" class="text-3xl font-bold text-primary text-center py-2">10000.00 USDT</div>
+                            </div>
+                            
+                            <div class="bg-secondary rounded-xl shadow-md p-4">
+                                <h3 id="price-panel-title" class="text-lg font-semibold text-primary mb-2 text-center">BTCUSDT Price</h3>
+                                <div id="price-display" class="text-3xl font-bold text-primary text-center py-1">...</div>
+                                <div id="connection-status" class="text-xs font-medium p-1 rounded text-center mt-2 status-disconnected">Disconnected</div>
+                            </div>
+
+                            <div class="bg-secondary rounded-xl shadow-md p-4">
+                                <h3 class="text-lg font-semibold text-primary mb-4" data-i18n-key="paper_trade_panel_title">Trade Panel</h3>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label for="symbol-input" class="block text-sm font-medium text-secondary" data-i18n-key="paper_symbol">Trading Symbol (e.g., BTCUSDT)</label>
+                                        <input type="text" id="symbol-input" value="BTCUSDT" class="mt-1 w-full bg-tertiary border-transparent rounded-lg px-3 py-2 text-primary focus:outline-none focus:ring-2 accent-border">
+                                    </div>
+                                    <div>
+                                        <label for="leverage" class="block text-sm font-medium text-secondary" data-i18n-key="paper_leverage">Leverage</label>
+                                        <select id="leverage" class="mt-1 w-full bg-tertiary border-transparent rounded-lg px-3 py-2 text-primary focus:outline-none focus:ring-2 accent-border">
+                                            <option value="1">1x</option>
+                                            <option value="5">5x</option>
+                                            <option value="10" selected>10x</option>
+                                            <option value="20">20x</option>
+                                            <option value="50">50x</option>
+                                            <option value="100">100x</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="amount" class="block text-sm font-medium text-secondary" data-i18n-key="paper_amount">Amount (USDT)</label>
+                                        <input type="number" id="amount" value="1000" class="mt-1 w-full bg-tertiary border-transparent rounded-lg px-3 py-2 text-primary focus:outline-none focus:ring-2 accent-border">
+                                    </div>
+                                    <div>
+                                        <label for="take-profit" class="block text-sm font-medium text-secondary" data-i18n-key="paper_tp">Take Profit (Price)</label>
+                                        <input type="number" id="take-profit" placeholder="Optional" data-i18n-key-placeholder="paper_optional" class="mt-1 w-full bg-tertiary border-transparent rounded-lg px-3 py-2 text-primary focus:outline-none focus:ring-2 accent-border">
+                                    </div>
+                                    <div>
+                                        <label for="stop-loss" class="block text-sm font-medium text-secondary" data-i18n-key="paper_sl">Stop Loss (Price)</label>
+                                        <input type="number" id="stop-loss" placeholder="Optional" data-i18n-key-placeholder="paper_optional" class="mt-1 w-full bg-tertiary border-transparent rounded-lg px-3 py-2 text-primary focus:outline-none focus:ring-2 accent-border">
+                                    </div>
+                                    <div class="flex space-x-3 pt-2">
+                                        <button id="buy-button" class="w-full buy-bg text-white font-bold py-3 px-4 rounded-lg hover:opacity-90 transition-opacity"><span data-i18n-key="paper_buy_long">BUY / LONG</span></button>
+                                        <button id="sell-button" class="w-full sell-bg text-white font-bold py-3 px-4 rounded-lg hover:opacity-90 transition-opacity"><span data-i18n-key="paper_sell_short">SELL / SHORT</span></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-2 xl:col-span-3 flex flex-col">
+                            <div class="flex items-center border-b border-custom mb-4">
+                                <button class="chart-tab-btn px-4 py-2 text-sm md:text-base font-semibold border-b-2 border-transparent" data-tab="chart"><span data-i18n-key="tab_chart">Chart</span></button>
+                                <button class="chart-tab-btn px-4 py-2 text-sm md:text-base font-semibold border-b-2 border-transparent" data-tab="leaderboard"><span data-i18n-key="tab_leaderboard">Класиране</span></button>
+                                <button class="chart-tab-btn px-4 py-2 text-sm md:text-base font-semibold border-b-2 border-transparent" data-tab="winnings"><span data-i18n-key="tab_winnings">Winnings</span></button>
+                                <button class="chart-tab-btn px-4 py-2 text-sm md:text-base font-semibold border-b-2 border-transparent" data-tab="bonuses"><span data-i18n-key="tab_bonuses">Бонуси</span></button>
+                            </div>
+
+                            <div class="flex-grow">
+                                <div id="chart-tab-content" class="charts-tab-content active h-[65vh] bg-secondary rounded-xl shadow-md">
+                                    <div id="tradingview-widget-container" class="w-full h-full"></div>
+                                </div>
+                                <div id="leaderboard-tab-content" class="charts-tab-content bg-secondary rounded-xl shadow-md p-6">
+                                    <h3 class="text-xl font-bold text-primary mb-4" data-i18n-key="leaderboard_title">Leaderboard (All Time Profit %)</h3>
+                                    <p class="text-sm text-secondary mb-4" data-i18n-key="leaderboard_note">Note: This is a demo leaderboard. A live version requires backend integration.</p>
+                                    <table class="w-full text-sm text-left text-secondary">
+                                        <thead class="text-xs text-primary uppercase bg-tertiary">
+                                            <tr>
+                                                <th scope="col" class="px-4 py-3" data-i18n-key="leaderboard_rank">Rank</th>
+                                                <th scope="col" class="px-4 py-3" data-i18n-key="leaderboard_user">User</th>
+                                                <th scope="col" class="px-4 py-3 text-right" data-i18n-key="leaderboard_profit">Profit %</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="border-b border-custom">
+                                                <td class="px-4 py-3 font-medium text-primary">1. 🥇</td>
+                                                <td class="px-4 py-3 font-medium text-primary">CryptoKing</td>
+                                                <td class="px-4 py-3 text-right font-bold buy-text">+1245.5%</td>
+                                            </tr>
+                                            <tr class="border-b border-custom">
+                                                <td class="px-4 py-3 font-medium text-primary">2. 🥈</td>
+                                                <td class="px-4 py-3 font-medium text-primary">ScalperPro</td>
+                                                <td class="px-4 py-3 text-right font-bold buy-text">+987.2%</td>
+                                            </tr>
+                                             <tr class="border-b border-custom">
+                                                <td class="px-4 py-3 font-medium text-primary">3. 🥉</td>
+                                                <td class="px-4 py-3 font-medium text-primary">DiamondHands</td>
+                                                <td class="px-4 py-3 text-right font-bold buy-text">+602.8%</td>
+                                            </tr>
+                                            <tr class="border-b border-custom">
+                                                <td class="px-4 py-3">4.</td>
+                                                <td class="px-4 py-3">FutureSight</td>
+                                                <td class="px-4 py-3 text-right buy-text">+455.1%</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-4 py-3">5.</td>
+                                                <td class="px-4 py-3">MoonTrader</td>
+                                                <td class="px-4 py-3 text-right sell-text">-15.3%</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div id="winnings-tab-content" class="charts-tab-content">
+                                     <div class="text-center p-12 bg-secondary rounded-xl">
+                                        <i class="fas fa-trophy text-5xl text-secondary mb-4"></i>
+                                        <p class="text-xl text-secondary" data-i18n-key="winnings_placeholder">Winnings section coming soon.</p>
+                                    </div>
+                                </div>
+                                 <div id="bonuses-tab-content" class="charts-tab-content">
+                                     <div class="text-center p-12 bg-secondary rounded-xl">
+                                        <i class="fas fa-gift text-5xl text-secondary mb-4"></i>
+                                        <p class="text-xl text-secondary" data-i18n-key="bonuses_placeholder">Bonuses section coming soon.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                         <div class="lg:col-span-3 xl:col-span-4 flex flex-col space-y-6 mt-6">
+                            <div class="bg-secondary rounded-xl shadow-md p-4 overflow-x-auto">
+                                <h3 class="text-lg font-semibold text-primary mb-4" data-i18n-key="paper_open_positions">Open Positions</h3>
+                                <table class="w-full text-sm text-left text-secondary whitespace-nowrap">
+                                    <thead class="text-xs text-primary uppercase bg-tertiary">
+                                        <tr>
+                                            <th scope="col" class="px-4 py-3" data-i18n-key="tbl_symbol">Symbol</th>
+                                            <th scope="col" class="px-4 py-3" data-i18n-key="tbl_type">Type</th>
+                                            <th scope="col" class="px-4 py-3" data-i18n-key="tbl_margin">Margin (USDT)</th>
+                                            <th scope="col" class="px-4 py-3" data-i18n-key="tbl_leverage">Leverage</th>
+                                            <th scope="col" class="px-4 py-3" data-i18n-key="tbl_entry">Entry Price</th>
+                                            <th scope="col" class="px-4 py-3" data-i18n-key="tbl_current">Current Price</th>
+                                            <th scope="col" class="px-4 py-3" data-i18n-key="tbl_liq">Liq. Price</th>
+                                            <th scope="col" class="px-4 py-3" data-i18n-key="tbl_tp">Take Profit</th>
+                                            <th scope="col" class="px-4 py-3" data-i18n-key="tbl_sl">Stop Loss</th>
+                                            <th scope="col" class="px-4 py-3" data-i18n-key="tbl_pnl">P/L (USDT)</th>
+                                            <th scope="col" class="px-4 py-3" data-i18n-key="tbl_action">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="open-positions-table">
+                                        </tbody>
+                                </table>
+                            </div>
+
+                            <div class="bg-secondary rounded-xl shadow-md p-4 overflow-x-auto">
+                                <h3 class="text-lg font-semibold text-primary mb-4" data-i18n-key="paper_trade_history">Trade History</h3>
+                                <table class="w-full text-sm text-left text-secondary whitespace-nowrap">
+                                    <thead class="text-xs text-primary uppercase bg-tertiary">
+                                        <tr>
+                                            <th scope="col" class="px-4 py-3" data-i18n-key="tbl_hist_id">ID</th>
+                                            <th scope="col" class="px-4 py-3" data-i18n-key="tbl_symbol">Symbol</th>
+                                            <th scope="col" class="px-4 py-3" data-i18n-key="tbl_type">Type</th>
+                                            <th scope="col" class="px-4 py-3" data-i18n-key="tbl_margin">Margin (USDT)</th>
+                                            <th scope="col" class="px-4 py-3" data-i18n-key="tbl_entry">Entry Price</th>
+                                            <th scope="col" class="px-4 py-3" data-i18n-key="tbl_exit">Exit Price</th>
+                                            <th scope="col" class="px-4 py-3" data-i18n-key="tbl_pnl">P/L (USDT)</th>
+                                            <th scope="col" class="px-4 py-3" data-i18n-key="tbl_reason">Reason</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="closed-orders-table">
+                                        </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                    <div id="tradingview-widget-container" class="h-[65vh] bg-secondary rounded-xl shadow-md"></div>
                 </section>
 
                 <section id="news-section" class="app-section hidden">
@@ -341,7 +473,7 @@
                 <section id="portfolio-section" class="app-section hidden">
                     <h2 class="text-3xl font-bold text-primary mb-6" data-i18n-key="section_title_portfolio">My Portfolio</h2>
                     <div class="text-center p-12 bg-secondary rounded-xl">
-                        <i class="fas fa-construction text-5xl text-secondary mb-4"></i>
+                        <i class="fas fa-briefcase text-5xl text-secondary mb-4"></i>
                         <p class="text-xl text-secondary" data-i18n-key="portfolio_placeholder">Portfolio tracking coming soon.</p>
                     </div>
                 </section>
@@ -355,7 +487,6 @@
                 </section>
             </div>
             
-            <!-- Mobile Bottom Tab Bar -->
             <nav id="mobile-nav" class="md:hidden grid grid-cols-5 gap-1 p-2 bg-secondary border-t border-custom">
                 <a href="#" class="nav-item flex flex-col items-center justify-center p-2 rounded-lg text-primary" data-section="charts">
                     <i class="fas fa-chart-pie text-xl"></i><span class="text-xs mt-1" data-i18n-key="nav_charts">Charts</span>
@@ -376,25 +507,14 @@
         </main>
     </div>
 
-    <!-- Firebase SDKs -->
     <script type="module">
         // IMPORTANT: These imports are for modern browsers and bundlers
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
         import { 
-            getAuth, 
-            onAuthStateChanged,
-            createUserWithEmailAndPassword,
-            signInWithEmailAndPassword,
-            signOut,
-            sendPasswordResetEmail,
-            sendEmailVerification
+            getAuth, onAuthStateChanged, createUserWithEmailAndPassword,
+            signInWithEmailAndPassword, signOut, sendPasswordResetEmail, sendEmailVerification
         } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-auth.js";
-        import { 
-            getFirestore, 
-            doc, 
-            setDoc,
-            getDoc
-        } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 
         // --- Your Web App's Firebase Configuration ---
         const firebaseConfig = {
@@ -419,9 +539,20 @@
             currentUser: null,
             currentSection: 'charts',
             registrationData: {},
+            // Paper Trading State
+            paperTrade: {
+                accountBalance: 10000,
+                openPositions: [],
+                closedOrders: [],
+                currentPrice: 0,
+                currentSymbol: "BTCUSDT",
+                priceSocket: null,
+                isInitialized: false
+            }
         };
 
         const dom = {
+            // Auth & Main Containers
             authContainer: document.getElementById('auth-container'),
             mainAppContainer: document.getElementById('main-app-container'),
             verifyEmailContainer: document.getElementById('verify-email-container'),
@@ -429,12 +560,12 @@
             forgotPasswordView: document.getElementById('forgot-password-view'),
             registerModal: document.getElementById('register-modal'),
             
+            // Forms
             loginForm: document.getElementById('login-form'),
             loginError: document.getElementById('login-error'),
             forgotPasswordForm: document.getElementById('forgot-password-form'),
             resetError: document.getElementById('reset-error'),
             resetSuccess: document.getElementById('reset-success'),
-
             registerForms: {
                 step1: document.getElementById('register-form-step1'),
                 step2: document.getElementById('register-form-step2'),
@@ -446,178 +577,145 @@
                 step3: document.getElementById('register-step3-error'),
             },
             
+            // Navigation & Sections
             navItems: document.querySelectorAll('.nav-item'),
             appSections: document.querySelectorAll('.app-section'),
+            chartTabBtns: document.querySelectorAll('.chart-tab-btn'),
+            chartsTabContents: document.querySelectorAll('.charts-tab-content'),
+
+            // Settings
             themeToggles: [document.getElementById('theme-toggle-desktop'), document.getElementById('theme-toggle-mobile')],
             langSwitcher: document.getElementById('lang-switcher'),
             langDropdown: document.getElementById('lang-dropdown'),
             currentLangText: document.getElementById('current-lang-text'),
-            symbolSearchInput: document.getElementById('symbol-search-input'),
 
+            // User Profile
             userAvatar: document.getElementById('user-avatar'),
             userFullname: document.getElementById('user-fullname'),
             userEmail: document.getElementById('user-email'),
 
-            // Verification screen elements
+            // Verification screen
             verificationEmailSpan: document.getElementById('verification-email-span'),
             resendVerificationButton: document.getElementById('resend-verification-button'),
             checkVerificationButton: document.getElementById('check-verification-button'),
             logoutFromVerifyButton: document.getElementById('logout-from-verify-button'),
             resendStatus: document.getElementById('resend-status'),
+
+            // Paper Trading Elements
+            paper: {
+                balanceDisplay: document.getElementById('balance-display'),
+                pricePanelTitle: document.getElementById('price-panel-title'),
+                priceDisplay: document.getElementById('price-display'),
+                connectionStatus: document.getElementById('connection-status'),
+                symbolInput: document.getElementById('symbol-input'),
+                leverageSelect: document.getElementById('leverage'),
+                amountInput: document.getElementById('amount'),
+                takeProfitInput: document.getElementById('take-profit'),
+                stopLossInput: document.getElementById('stop-loss'),
+                buyButton: document.getElementById('buy-button'),
+                sellButton: document.getElementById('sell-button'),
+                openPositionsTable: document.getElementById('open-positions-table'),
+                closedOrdersTable: document.getElementById('closed-orders-table'),
+            }
         };
 
         // --- Internationalization (i18n) ---
         const i18nData = {
             en: {
-                login_welcome_title: "Welcome to OpenTrading",
-                login_welcome_subtitle: "Sign in to access your portfolio.",
-                email_label: "Email",
-                password_label: "Password",
-                login_button: "Sign In",
-                forgot_password_link: "Forgot Password?",
-                no_account_prompt: "Don't have an account?",
-                register_link: "Register",
-                reset_password_title: "Reset Password",
-                reset_password_instructions: "Enter your email and we'll send you a link to get back into your account.",
-                send_reset_link_button: "Send Reset Link",
-                back_to_login_link: "Back to Login",
-                register_step1_title: "Create Account (Step 1/3)",
-                register_step1_subtitle: "Start with your credentials.",
-                confirm_password_label: "Confirm Password",
-                password_strength_prompt: "Minimum 6 characters.",
-                next_button: "Next",
-                register_step2_title: "Personal Details (Step 2/3)",
-                register_step2_subtitle: "Required for account verification.",
-                fullname_label: "Full Name",
-                username_label: "Username",
-                back_button: "Back",
-                register_step3_title: "Final Step (Step 3/3)",
-                register_step3_subtitle: "Please review and accept our terms.",
-                agree_to_terms_prompt: "I agree to the",
-                age_confirm_prompt: "I confirm I am 18 years of age or older.",
-                create_account_button: "Create Account",
-                nav_charts: "Charts",
-                nav_news: "News",
-                nav_education: "Education",
-                nav_portfolio: "Portfolio",
-                nav_api: "API",
-                section_title_charts: "Charts",
-                search_symbol_placeholder: "Search symbol e.g., AAPL",
-                section_title_news: "Market News",
-                section_title_education: "Education",
-                education_placeholder: "Educational content coming soon.",
-                section_title_portfolio: "My Portfolio",
-                portfolio_placeholder: "Portfolio tracking coming soon.",
-                section_title_api: "API Access",
-                api_placeholder: "API documentation and keys will be available here.",
-                verify_email_title: "Verify Your Email",
-                verify_email_instructions_part1: "A verification link has been sent to",
-                verify_email_instructions_part2: ". Please check your inbox and click the link to activate your account.",
-                resend_email_button: "Resend Verification Email",
-                check_verification_button: "I've Verified, Continue",
-                wrong_account_prompt: "Wrong account?",
-                logout_button: "Logout",
+                login_welcome_title: "Welcome to OpenTrading", login_welcome_subtitle: "Sign in to access your portfolio.", email_label: "Email", password_label: "Password", login_button: "Sign In",
+                forgot_password_link: "Forgot Password?", no_account_prompt: "Don't have an account?", register_link: "Register", reset_password_title: "Reset Password",
+                reset_password_instructions: "Enter your email and we'll send you a link to get back into your account.", send_reset_link_button: "Send Reset Link", back_to_login_link: "Back to Login",
+                register_step1_title: "Create Account (Step 1/3)", register_step1_subtitle: "Start with your credentials.", confirm_password_label: "Confirm Password",
+                password_strength_prompt: "Minimum 6 characters.", next_button: "Next", register_step2_title: "Personal Details (Step 2/3)",
+                register_step2_subtitle: "Required for account verification.", fullname_label: "Full Name", username_label: "Username", back_button: "Back",
+                register_step3_title: "Final Step (Step 3/3)", register_step3_subtitle: "Please review and accept our terms.", agree_to_terms_prompt: "I agree to the",
+                age_confirm_prompt: "I confirm I am 18 years of age or older.", create_account_button: "Create Account", nav_charts: "Charts", nav_news: "News",
+                nav_education: "Education", nav_portfolio: "Portfolio", nav_api: "API", section_title_news: "Market News",
+                section_title_education: "Education", education_placeholder: "Educational content coming soon.", section_title_portfolio: "My Portfolio",
+                portfolio_placeholder: "Portfolio tracking coming soon.", section_title_api: "API Access", api_placeholder: "API documentation and keys will be available here.",
+                verify_email_title: "Verify Your Email", verify_email_instructions_part1: "A verification link has been sent to",
+                verify_email_instructions_part2: ". Please check your inbox and click the link to activate your account.", resend_email_button: "Resend Verification Email",
+                check_verification_button: "I've Verified, Continue", wrong_account_prompt: "Wrong account?", logout_button: "Logout",
+                // Paper Trading
+                paper_balance_title: "Available Balance", paper_trade_panel_title: "Trade Panel", paper_symbol: "Trading Symbol (e.g., BTCUSDT)", paper_leverage: "Leverage",
+                paper_amount: "Amount (USDT)", paper_tp: "Take Profit (Price)", paper_sl: "Stop Loss (Price)", paper_optional: "Optional", paper_buy_long: "BUY / LONG",
+                paper_sell_short: "SELL / SHORT", paper_open_positions: "Open Positions", paper_trade_history: "Trade History",
+                tbl_symbol: "Symbol", tbl_type: "Type", tbl_margin: "Margin (USDT)", tbl_leverage: "Leverage", tbl_entry: "Entry Price", tbl_current: "Current Price",
+                tbl_liq: "Liq. Price", tbl_tp: "Take Profit", tbl_sl: "Stop Loss", tbl_pnl: "P/L (USDT)", tbl_action: "Action",
+                tbl_hist_id: "ID", tbl_exit: "Exit Price", tbl_reason: "Reason",
+                // New Tabs
+                tab_chart: "Chart", tab_leaderboard: "Leaderboard", tab_winnings: "Winnings", tab_bonuses: "Bonuses",
+                leaderboard_title: "Leaderboard (All Time Profit %)", leaderboard_note: "Note: This is a demo leaderboard. A live version requires backend integration.",
+                leaderboard_rank: "Rank", leaderboard_user: "User", leaderboard_profit: "Profit %",
+                winnings_placeholder: "Winnings section coming soon.", bonuses_placeholder: "Bonuses section coming soon.",
                 // Error messages
-                error_password_mismatch: "Passwords do not match. Please re-enter.",
-                error_email_in_use: "This email is already registered. Please log in or use a different one.",
-                error_weak_password: "Password is too weak. It must be at least 6 characters long.",
-                error_invalid_email: "The email address is not valid.",
-                error_generic_register: "An unexpected error occurred. Please try again.",
-                error_wrong_password: "Incorrect password. Please try again.",
-                error_user_not_found: "No account found with this email. Please register.",
-                error_generic_login: "Login failed. Please check your credentials and try again."
+                error_password_mismatch: "Passwords do not match. Please re-enter.", error_email_in_use: "This email is already registered. Please log in or use a different one.",
+                error_weak_password: "Password is too weak. It must be at least 6 characters long.", error_invalid_email: "The email address is not valid.",
+                error_generic_register: "An unexpected error occurred. Please try again.", error_wrong_password: "Incorrect password. Please try again.",
+                error_user_not_found: "No account found with this email. Please register.", error_generic_login: "Login failed. Please check your credentials and try again.",
+                paper_alert_invalid_amount: "Please enter a valid amount (margin).", paper_alert_insufficient_balance: "Insufficient balance. Your available balance is less than the requested margin.",
+                paper_alert_no_price: "Waiting for real-time price before opening a position."
             },
             bg: {
-                login_welcome_title: "Добре дошли в OpenTrading",
-                login_welcome_subtitle: "Влезте, за да достъпите портфолиото си.",
-                email_label: "Имейл",
-                password_label: "Парола",
-                login_button: "Вход",
-                forgot_password_link: "Забравена парола?",
-                no_account_prompt: "Нямате акаунт?",
-                register_link: "Регистрация",
-                reset_password_title: "Нулиране на парола",
-                reset_password_instructions: "Въведете имейла си и ще ви изпратим линк за възстановяване.",
-                send_reset_link_button: "Изпрати линк",
-                back_to_login_link: "Назад към входа",
-                register_step1_title: "Създай акаунт (Стъпка 1/3)",
-                register_step1_subtitle: "Започнете с данните за вход.",
-                confirm_password_label: "Потвърди парола",
-                password_strength_prompt: "Минимум 6 символа.",
-                next_button: "Напред",
-                register_step2_title: "Лични данни (Стъпка 2/3)",
-                register_step2_subtitle: "Нужни за верификация на акаунта.",
-                fullname_label: "Пълно име",
-                username_label: "Потребителско име",
-                back_button: "Назад",
-                register_step3_title: "Финална стъпка (Стъпка 3/3)",
-                register_step3_subtitle: "Моля, прегледайте и приемете условията.",
-                agree_to_terms_prompt: "Съгласен съм с",
-                age_confirm_prompt: "Потвърждавам, че имам навършени 18 години.",
-                create_account_button: "Създай акаунт",
-                nav_charts: "Графики",
-                nav_news: "Новини",
-                nav_education: "Обучение",
-                nav_portfolio: "Портфолио",
-                nav_api: "API",
-                section_title_charts: "Графики",
-                search_symbol_placeholder: "Търси символ, напр. AAPL",
-                section_title_news: "Пазарни новини",
-                section_title_education: "Обучение",
-                education_placeholder: "Образователно съдържание очаквайте скоро.",
-                section_title_portfolio: "Моето портфолио",
-                portfolio_placeholder: "Проследяване на портфолио очаквайте скоро.",
-                section_title_api: "API Достъп",
-                api_placeholder: "API документация и ключове ще бъдат достъпни тук.",
-                verify_email_title: "Потвърдете имейла си",
-                verify_email_instructions_part1: "Изпратен е линк за потвърждение на",
-                verify_email_instructions_part2: ". Моля, проверете пощата си и кликнете на линка, за да активирате акаунта си.",
-                resend_email_button: "Изпрати отново",
-                check_verification_button: "Потвърдих, Продължи",
-                wrong_account_prompt: "Грешен акаунт?",
-                logout_button: "Изход",
+                login_welcome_title: "Добре дошли в OpenTrading", login_welcome_subtitle: "Влезте, за да достъпите портфолиото си.", email_label: "Имейл", password_label: "Парола", login_button: "Вход",
+                forgot_password_link: "Забравена парола?", no_account_prompt: "Нямате акаунт?", register_link: "Регистрация", reset_password_title: "Нулиране на парола",
+                reset_password_instructions: "Въведете имейла си и ще ви изпратим линк за възстановяване.", send_reset_link_button: "Изпрати линк", back_to_login_link: "Назад към входа",
+                register_step1_title: "Създай акаунт (Стъпка 1/3)", register_step1_subtitle: "Започнете с данните за вход.", confirm_password_label: "Потвърди парола",
+                password_strength_prompt: "Минимум 6 символа.", next_button: "Напред", register_step2_title: "Лични данни (Стъпка 2/3)",
+                register_step2_subtitle: "Нужни за верификация на акаунта.", fullname_label: "Пълно име", username_label: "Потребителско име", back_button: "Назад",
+                register_step3_title: "Финална стъпка (Стъпка 3/3)", register_step3_subtitle: "Моля, прегледайте и приемете условията.", agree_to_terms_prompt: "Съгласен съм с",
+                age_confirm_prompt: "Потвърждавам, че имам навършени 18 години.", create_account_button: "Създай акаунт", nav_charts: "Графики", nav_news: "Новини",
+                nav_education: "Обучение", nav_portfolio: "Портфолио", nav_api: "API", section_title_news: "Пазарни новини",
+                section_title_education: "Обучение", education_placeholder: "Образователно съдържание очаквайте скоро.", section_title_portfolio: "Моето портфолио",
+                portfolio_placeholder: "Проследяване на портфолио очаквайте скоро.", section_title_api: "API Достъп", api_placeholder: "API документация и ключове ще бъдат достъпни тук.",
+                verify_email_title: "Потвърдете имейла си", verify_email_instructions_part1: "Изпратен е линк за потвърждение на",
+                verify_email_instructions_part2: ". Моля, проверете пощата си и кликнете на линка, за да активирате акаунта си.", resend_email_button: "Изпрати отново",
+                check_verification_button: "Потвърдих, Продължи", wrong_account_prompt: "Грешен акаунт?", logout_button: "Изход",
+                // Paper Trading
+                paper_balance_title: "Наличен Баланс", paper_trade_panel_title: "Панел за търговия", paper_symbol: "Търговски символ (напр. BTCUSDT)", paper_leverage: "Ливъридж",
+                paper_amount: "Количество (USDT)", paper_tp: "Take Profit (Цена)", paper_sl: "Stop Loss (Цена)", paper_optional: "Опционално", paper_buy_long: "КУПИ / ДЪЛГА",
+                paper_sell_short: "ПРОДАЙ / КЪСА", paper_open_positions: "Отворени Позиции", paper_trade_history: "История на сделките",
+                tbl_symbol: "Символ", tbl_type: "Тип", tbl_margin: "Маржин (USDT)", tbl_leverage: "Ливъридж", tbl_entry: "Входна Цена", tbl_current: "Текуща Цена",
+                tbl_liq: "Цена на Ликв.", tbl_tp: "Take Profit", tbl_sl: "Stop Loss", tbl_pnl: "P/L (USDT)", tbl_action: "Действие",
+                tbl_hist_id: "ID", tbl_exit: "Изходна Цена", tbl_reason: "Причина",
+                // New Tabs
+                tab_chart: "Графика", tab_leaderboard: "Класиране", tab_winnings: "Winnings", tab_bonuses: "Бонуси",
+                leaderboard_title: "Класация (% обща печалба)", leaderboard_note: "Забележка: Това е демо класация. Истинската версия изисква интеграция с база данни.",
+                leaderboard_rank: "Място", leaderboard_user: "Потребител", leaderboard_profit: "% Печалба",
+                winnings_placeholder: "Секция 'Winnings' очаквайте скоро.", bonuses_placeholder: "Секция 'Бонуси' очаквайте скоро.",
                 // Error messages
-                error_password_mismatch: "Паролите не съвпадат. Моля, въведете ги отново.",
-                error_email_in_use: "Този имейл вече е регистриран. Моля, влезте в системата или използвайте друг.",
-                error_weak_password: "Паролата е твърде слаба. Трябва да е поне 6 символа.",
-                error_invalid_email: "Имейл адресът не е валиден.",
-                error_generic_register: "Възникна неочаквана грешка. Моля, опитайте отново.",
-                error_wrong_password: "Грешна парола. Моля, опитайте отново.",
-                error_user_not_found: "Няма акаунт с този имейл. Моля, регистрирайте се.",
-                error_generic_login: "Грешка при вход. Проверете данните си и опитайте отново."
+                error_password_mismatch: "Паролите не съвпадат. Моля, въведете ги отново.", error_email_in_use: "Този имейл вече е регистриран. Моля, влезте в системата или използвайте друг.",
+                error_weak_password: "Паролата е твърде слаба. Трябва да е поне 6 символа.", error_invalid_email: "Имейл адресът не е валиден.",
+                error_generic_register: "Възникна неочаквана грешка. Моля, опитайте отново.", error_wrong_password: "Грешна парола. Моля, опитайте отново.",
+                error_user_not_found: "Няма акаунт с този имейл. Моля, регистрирайте се.", error_generic_login: "Грешка при вход. Проверете данните си и опитайте отново.",
+                paper_alert_invalid_amount: "Моля, въведете валидно количество (маржин).", paper_alert_insufficient_balance: "Недостатъчен баланс. Вашият наличен баланс е по-малък от заявения маржин.",
+                paper_alert_no_price: "Изчакайте получаването на цена в реално време преди да отворите позиция."
             }
         };
 
-        const availableLanguages = {
-            en: 'English',
-            bg: 'Български'
-        };
+        const availableLanguages = { en: 'English', bg: 'Български' };
         
-        const getTranslatedText = (key) => {
-            return i18nData[state.currentLang]?.[key] || i18nData.en[key];
-        }
+        const getTranslatedText = (key) => i18nData[state.currentLang]?.[key] || i18nData.en[key] || key;
 
         const updateLanguage = () => {
             const lang = state.currentLang;
-            
             document.documentElement.lang = lang;
             dom.currentLangText.textContent = availableLanguages[lang];
-
             document.querySelectorAll('[data-i18n-key]').forEach(el => {
                 const key = el.dataset.i18nKey;
                 const translation = getTranslatedText(key);
-                if (translation) {
-                    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-                        el.placeholder = translation;
-                    } else {
-                        el.innerHTML = translation;
-                    }
-                }
+                if (translation) el.innerHTML = translation;
             });
-
+             document.querySelectorAll('[data-i18n-key-placeholder]').forEach(el => {
+                const key = el.dataset.i18nKeyPlaceholder;
+                const translation = getTranslatedText(key);
+                if (translation) el.placeholder = translation;
+            });
             if (state.currentUser && state.currentUser.emailVerified) {
                 createTradingViewWidget('TVC:SPX', lang);
                 createNewsWidget(lang);
+                // Force UI update for paper trader to reflect language change in tables
+                if(state.paperTrade.isInitialized) updatePaperTradeUI(); 
             }
         };
         
@@ -632,6 +730,7 @@
                 langItem.addEventListener('click', (e) => {
                     e.preventDefault();
                     state.currentLang = code;
+                    localStorage.setItem('language', code);
                     updateLanguage();
                     dom.langDropdown.classList.add('hidden');
                 });
@@ -644,9 +743,8 @@
             state.isDarkMode = !e.target.checked;
             localStorage.setItem('theme', state.isDarkMode ? 'dark' : 'light');
             applyTheme();
-
             if(state.currentUser && state.currentUser.emailVerified) {
-               createTradingViewWidget(dom.symbolSearchInput.value || 'TVC:SPX', state.currentLang);
+               createTradingViewWidget(state.paperTrade.currentSymbol, state.currentLang);
                createNewsWidget(state.currentLang);
             }
         };
@@ -665,8 +763,8 @@
                 const is_active = item.dataset.section === sectionId;
                 item.classList.toggle('text-primary', is_active);
                 item.classList.toggle('text-secondary', !is_active);
-                if(is_active) item.classList.add('bg-tertiary');
-                else item.classList.remove('bg-tertiary');
+                item.classList.toggle('bg-tertiary', is_active);
+                if(!is_active) item.classList.remove('bg-tertiary');
             });
         };
         
@@ -689,43 +787,225 @@
         // --- TradingView Widgets ---
         const createTradingViewWidget = (symbol, lang) => {
             const container = document.getElementById('tradingview-widget-container');
-            if(!container) return;
+            if(!container || !document.body.contains(container)) return;
             container.innerHTML = '';
             new TradingView.widget({
-                "autosize": true,
-                "symbol": symbol,
-                "interval": "D",
-                "timezone": "Etc/UTC",
-                "theme": state.isDarkMode ? "dark" : "light",
-                "style": "1",
-                "locale": lang,
-                "toolbar_bg": state.isDarkMode ? "#1c1c1e" : "#ffffff",
-                "enable_publishing": false,
-                "hide_side_toolbar": false,
-                "allow_symbol_change": true,
+                "autosize": true, "symbol": `BINANCE:${symbol.toUpperCase()}`, "interval": "60",
+                "timezone": "Etc/UTC", "theme": state.isDarkMode ? "dark" : "light",
+                "style": "1", "locale": lang, "toolbar_bg": state.isDarkMode ? "#1c1c1e" : "#ffffff",
+                "enable_publishing": false, "hide_side_toolbar": false, "allow_symbol_change": false,
                 "container_id": "tradingview-widget-container"
             });
         };
 
         const createNewsWidget = (lang) => {
             const container = document.getElementById('tradingview-news-widget-container');
-            if(!container) return;
+            if(!container || !document.body.contains(container)) return;
             container.innerHTML = '';
             new TradingView.News({
-                "feedMode": "all_symbols",
-                "colorTheme": state.isDarkMode ? "dark" : "light",
-                "locale": lang,
-                "width": "100%",
-                "height": "100%",
+                "feedMode": "all_symbols", "colorTheme": state.isDarkMode ? "dark" : "light",
+                "locale": lang, "width": "100%", "height": "100%",
             }, container);
         };
+        
+        // --- Paper Trading Logic ---
+        function initPaperTrading() {
+            if (state.paperTrade.isInitialized) return;
+            loadPaperTradeState();
+            setupForSymbol(state.paperTrade.currentSymbol);
+            updatePaperTradeUI();
+            state.paperTrade.isInitialized = true;
+        }
 
-        const handleSymbolSearch = (e) => {
-            if (e.key === 'Enter' && e.target.value) {
-                createTradingViewWidget(e.target.value.toUpperCase(), state.currentLang);
-                e.target.blur();
+        function setupForSymbol(symbol) {
+            state.paperTrade.currentSymbol = symbol.toUpperCase();
+            dom.paper.symbolInput.value = state.paperTrade.currentSymbol;
+            createTradingViewWidget(state.paperTrade.currentSymbol, state.currentLang);
+            connectWebSocket(state.paperTrade.currentSymbol);
+            updatePaperTradeUI();
+        }
+
+        function changeSymbol() {
+            const selectedSymbol = dom.paper.symbolInput.value;
+            setupForSymbol(selectedSymbol);
+            savePaperTradeState();
+        }
+
+        function connectWebSocket(symbol) {
+            if (state.paperTrade.priceSocket) {
+                state.paperTrade.priceSocket.close();
             }
-        };
+            const wsSymbol = symbol.toLowerCase();
+            state.paperTrade.priceSocket = new WebSocket(`wss://stream.binance.com:9443/ws/${wsSymbol}@trade`);
+            const statusDiv = dom.paper.connectionStatus;
+            statusDiv.textContent = 'Connecting...'; statusDiv.className = 'text-xs font-medium p-1 rounded text-center mt-2 status-connecting';
+            state.paperTrade.priceSocket.onopen = () => { statusDiv.textContent = 'Connected'; statusDiv.className = 'text-xs font-medium p-1 rounded text-center mt-2 status-connected'; };
+            state.paperTrade.priceSocket.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                if (data.p) {
+                    state.paperTrade.currentPrice = parseFloat(data.p);
+                    checkAllPositions(); 
+                    updatePaperTradeUI();
+                }
+            };
+            state.paperTrade.priceSocket.onclose = () => { if (statusDiv.textContent !== 'Connecting...') { statusDiv.textContent = 'Disconnected'; statusDiv.className = 'text-xs font-medium p-1 rounded text-center mt-2 status-disconnected'; } };
+            state.paperTrade.priceSocket.onerror = (error) => { console.error("WebSocket Error:", error); statusDiv.textContent = 'Connection Error'; statusDiv.className = 'text-xs font-medium p-1 rounded text-center mt-2 status-disconnected'; };
+        }
+
+        function savePaperTradeState() {
+            if (!state.currentUser) return;
+            const dataToSave = {
+                accountBalance: state.paperTrade.accountBalance,
+                openPositions: state.paperTrade.openPositions,
+                closedOrders: state.paperTrade.closedOrders,
+                currentSymbol: state.paperTrade.currentSymbol,
+            };
+            localStorage.setItem(`paperTraderState_${state.currentUser.uid}`, JSON.stringify(dataToSave));
+        }
+
+        function loadPaperTradeState() {
+            if (!state.currentUser) return;
+            const savedState = localStorage.getItem(`paperTraderState_${state.currentUser.uid}`);
+            if (savedState) {
+                const loadedData = JSON.parse(savedState);
+                state.paperTrade.accountBalance = loadedData.accountBalance || 10000;
+                state.paperTrade.openPositions = loadedData.openPositions || [];
+                state.paperTrade.closedOrders = loadedData.closedOrders || [];
+                state.paperTrade.currentSymbol = loadedData.currentSymbol || "BTCUSDT";
+            }
+        }
+
+        function placeOrder(type) {
+            const leverage = parseFloat(dom.paper.leverageSelect.value);
+            const amount = parseFloat(dom.paper.amountInput.value);
+            const takeProfit = parseFloat(dom.paper.takeProfitInput.value) || null;
+            const stopLoss = parseFloat(dom.paper.stopLossInput.value) || null;
+
+            if (isNaN(amount) || amount <= 0) { alert(getTranslatedText('paper_alert_invalid_amount')); return; }
+            if (amount > state.paperTrade.accountBalance) { alert(getTranslatedText('paper_alert_insufficient_balance')); return; }
+            if (state.paperTrade.currentPrice === 0) { alert(getTranslatedText('paper_alert_no_price')); return; }
+
+            state.paperTrade.accountBalance -= amount;
+            const position = {
+                id: Date.now(), symbol: state.paperTrade.currentSymbol, type: type, margin: amount, leverage: leverage,
+                entryPrice: state.paperTrade.currentPrice, takeProfit: takeProfit, stopLoss: stopLoss,
+            };
+            state.paperTrade.openPositions.push(position);
+            dom.paper.takeProfitInput.value = ''; dom.paper.stopLossInput.value = '';
+            savePaperTradeState(); updatePaperTradeUI();
+        }
+
+        function closePosition(positionId, reasonKey = 'Ръчно') {
+            const index = state.paperTrade.openPositions.findIndex(p => p.id === positionId);
+            if (index === -1) return;
+            closePositionWithPrice(state.paperTrade.openPositions[index].id, reasonKey, state.paperTrade.currentPrice);
+        }
+        
+        function closePositionWithPrice(positionId, reason, exitPrice) {
+            const index = state.paperTrade.openPositions.findIndex(p => p.id === positionId);
+            if (index === -1) return;
+
+            const position = state.paperTrade.openPositions[index];
+            const pnl = calculatePL(position, exitPrice);
+            state.paperTrade.accountBalance += (position.margin + pnl);
+
+            const closedOrder = {
+                id: position.id, symbol: position.symbol, type: position.type, margin: position.margin,
+                entryPrice: position.entryPrice, exitPrice: exitPrice, pnl: pnl, reason: reason
+            };
+            
+            state.paperTrade.closedOrders.unshift(closedOrder);
+            state.paperTrade.openPositions.splice(index, 1);
+            savePaperTradeState(); updatePaperTradeUI();
+        }
+
+        function checkAllPositions() {
+             [...state.paperTrade.openPositions].forEach(p => {
+                const exitPrice = state.paperTrade.currentPrice;
+                let triggerClose = false; let reason = ''; let finalExitPrice = exitPrice;
+
+                if (p.type === 'buy') {
+                    if (p.takeProfit && exitPrice >= p.takeProfit) { triggerClose = true; reason = 'Take Profit'; finalExitPrice = p.takeProfit; } 
+                    else if (p.stopLoss && exitPrice <= p.stopLoss) { triggerClose = true; reason = 'Stop Loss'; finalExitPrice = p.stopLoss; }
+                } else {
+                    if (p.takeProfit && exitPrice <= p.takeProfit) { triggerClose = true; reason = 'Take Profit'; finalExitPrice = p.takeProfit; } 
+                    else if (p.stopLoss && exitPrice >= p.stopLoss) { triggerClose = true; reason = 'Stop Loss'; finalExitPrice = p.stopLoss; }
+                }
+
+                if (!triggerClose) {
+                    const liquidationPrice = calculateLiquidationPrice(p);
+                    if ((p.type === 'buy' && exitPrice <= liquidationPrice) || (p.type === 'sell' && exitPrice >= liquidationPrice)) {
+                         triggerClose = true; reason = 'Ликвидация'; finalExitPrice = liquidationPrice;
+                    }
+                }
+                if(triggerClose) closePositionWithPrice(p.id, reason, finalExitPrice);
+            });
+        }
+        
+        function calculatePL(position, exitPrice) {
+            const positionSize = position.margin * position.leverage;
+            const quantity = positionSize / position.entryPrice;
+            return (position.type === 'buy') ? (exitPrice - position.entryPrice) * quantity : (position.entryPrice - exitPrice) * quantity;
+        }
+        
+        function calculateLiquidationPrice(position) {
+            const marginFraction = 1 / position.leverage;
+            return (position.type === 'buy') ? position.entryPrice * (1 - marginFraction) : position.entryPrice * (1 + marginFraction);
+        }
+        
+        function updatePaperTradeUI() {
+            dom.paper.balanceDisplay.textContent = `${state.paperTrade.accountBalance.toFixed(2)} USDT`;
+            dom.paper.pricePanelTitle.innerHTML = `<span data-i18n-key="paper_price_of">${state.paperTrade.currentSymbol} Price</span>`;
+            dom.paper.priceDisplay.textContent = state.paperTrade.currentPrice > 0 ? `${state.paperTrade.currentPrice.toFixed(4)} USDT` : '...';
+            
+            const openPositionsBody = dom.paper.openPositionsTable;
+            openPositionsBody.innerHTML = '';
+            state.paperTrade.openPositions.forEach(p => {
+                const pnl = calculatePL(p, state.paperTrade.currentPrice);
+                const pnlClass = pnl >= 0 ? 'buy-text' : 'sell-text';
+                const liquidationPrice = calculateLiquidationPrice(p);
+                const typeClass = p.type === 'buy' ? 'buy-text' : 'sell-text';
+                const row = `
+                    <tr class="border-b border-custom">
+                        <td class="px-4 py-3">${p.symbol}</td>
+                        <td class="px-4 py-3 font-bold ${typeClass}">${p.type.toUpperCase()}</td>
+                        <td class="px-4 py-3">${p.margin.toFixed(2)}</td>
+                        <td class="px-4 py-3">${p.leverage}x</td>
+                        <td class="px-4 py-3">${p.entryPrice.toFixed(4)}</td>
+                        <td class="px-4 py-3">${state.paperTrade.currentPrice.toFixed(4)}</td>
+                        <td class="px-4 py-3 sell-text">${liquidationPrice.toFixed(4)}</td>
+                        <td class="px-4 py-3">${p.takeProfit ? p.takeProfit.toFixed(4) : 'N/A'}</td>
+                        <td class="px-4 py-3">${p.stopLoss ? p.stopLoss.toFixed(4) : 'N/A'}</td>
+                        <td class="px-4 py-3 font-bold ${pnlClass}">${pnl.toFixed(2)}</td>
+                        <td class="px-4 py-3"><button class="close-position-btn text-xs bg-tertiary text-primary px-2 py-1 rounded hover:opacity-80" data-id="${p.id}">${getTranslatedText('tbl_action_close') || 'Close'}</button></td>
+                    </tr>`;
+                openPositionsBody.innerHTML += row;
+            });
+
+            const closedOrdersBody = dom.paper.closedOrdersTable;
+            closedOrdersBody.innerHTML = '';
+            state.paperTrade.closedOrders.slice(0, 50).forEach(o => { // Limit history to 50
+                const pnlClass = o.pnl >= 0 ? 'buy-text' : 'sell-text';
+                 const typeClass = o.type === 'buy' ? 'buy-text' : 'sell-text';
+                const row = `
+                    <tr class="border-b border-custom">
+                        <td class="px-4 py-3">${o.id}</td>
+                        <td class="px-4 py-3">${o.symbol}</td>
+                        <td class="px-4 py-3 font-bold ${typeClass}">${o.type.toUpperCase()}</td>
+                        <td class="px-4 py-3">${o.margin.toFixed(2)}</td>
+                        <td class="px-4 py-3">${o.entryPrice.toFixed(4)}</td>
+                        <td class="px-4 py-3">${o.exitPrice.toFixed(4)}</td>
+                        <td class="px-4 py-3 font-bold ${pnlClass}">${o.pnl.toFixed(2)}</td>
+                        <td class="px-4 py-3">${o.reason}</td>
+                    </tr>`;
+                closedOrdersBody.innerHTML += row;
+            });
+            // Re-add event listeners for close buttons
+            document.querySelectorAll('.close-position-btn').forEach(btn => {
+                btn.onclick = () => closePosition(parseInt(btn.dataset.id));
+            });
+        }
+
 
         // --- Authentication Logic ---
         const handleLogin = async (e) => {
@@ -733,93 +1013,54 @@
             const email = e.target.elements['login-email'].value;
             const password = e.target.elements['login-password'].value;
             const button = e.target.querySelector('button');
-            
-            dom.loginError.textContent = '';
-            button.disabled = true;
-
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-            } catch (error) {
+            dom.loginError.textContent = ''; button.disabled = true;
+            try { await signInWithEmailAndPassword(auth, email, password); } catch (error) {
                 console.error("Login Error:", error.code, error.message);
-                switch (error.code) {
-                    case 'auth/user-not-found':
-                        dom.loginError.textContent = getTranslatedText('error_user_not_found');
-                        break;
-                    case 'auth/wrong-password':
-                        dom.loginError.textContent = getTranslatedText('error_wrong_password');
-                        break;
-                    default:
-                        dom.loginError.textContent = getTranslatedText('error_generic_login');
-                        break;
-                }
-            } finally {
-                 button.disabled = false;
-            }
+                let key = 'error_generic_login';
+                if(error.code === 'auth/user-not-found') key = 'error_user_not_found';
+                if(error.code === 'auth/wrong-password') key = 'error_wrong_password';
+                dom.loginError.textContent = getTranslatedText(key);
+            } finally { button.disabled = false; }
         };
 
         const handlePasswordReset = async (e) => {
             e.preventDefault();
             const email = e.target.elements['reset-email'].value;
-            dom.resetError.textContent = '';
-            dom.resetSuccess.textContent = '';
-
-            try {
-                await sendPasswordResetEmail(auth, email);
-                dom.resetSuccess.textContent = 'Reset link sent! Check your inbox.';
-            } catch (error) {
-                dom.resetError.textContent = 'Could not send reset link. Please check the email.';
-            }
+            dom.resetError.textContent = ''; dom.resetSuccess.textContent = '';
+            try { await sendPasswordResetEmail(auth, email); dom.resetSuccess.textContent = 'Reset link sent! Check your inbox.'; } 
+            catch (error) { dom.resetError.textContent = 'Could not send reset link. Please check the email.'; }
         };
         
         const handleRegistration = async () => {
             const button = dom.registerForms.step3.querySelector('button[type="submit"]');
-            button.disabled = true;
-            dom.registerErrors.step3.textContent = '';
-
+            button.disabled = true; dom.registerErrors.step3.textContent = '';
             const { email, password, fullName, username } = state.registrationData;
-            
             try {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
-                
                 await sendEmailVerification(user);
-
                 await setDoc(doc(db, "users", user.uid), {
-                    uid: user.uid,
-                    email: user.email,
-                    fullName: fullName,
-                    username: username,
-                    createdAt: new Date()
+                    uid: user.uid, email: user.email, fullName: fullName,
+                    username: username, createdAt: new Date()
                 });
-
             } catch(error) {
                 console.error("Registration Error:", error.code, error.message);
-                switch (error.code) {
-                    case 'auth/email-already-in-use':
-                        dom.registerErrors.step3.textContent = getTranslatedText('error_email_in_use');
-                        break;
-                    case 'auth/weak-password':
-                        dom.registerErrors.step3.textContent = getTranslatedText('error_weak_password');
-                        break;
-                    case 'auth/invalid-email':
-                        dom.registerErrors.step3.textContent = getTranslatedText('error_invalid_email');
-                        break;
-                    default:
-                        dom.registerErrors.step3.textContent = getTranslatedText('error_generic_register');
-                        break;
-                }
-            } finally {
-                button.disabled = false;
-            }
+                let key = 'error_generic_register';
+                if(error.code === 'auth/email-already-in-use') key = 'error_email_in_use';
+                if(error.code === 'auth/weak-password') key = 'error_weak_password';
+                if(error.code === 'auth/invalid-email') key = 'error_invalid_email';
+                dom.registerErrors.step3.textContent = getTranslatedText(key);
+            } finally { button.disabled = false; }
         };
 
         const handleLogout = () => {
+            if (state.paperTrade.priceSocket) state.paperTrade.priceSocket.close();
+            state.paperTrade.isInitialized = false;
             signOut(auth);
         };
         
         const updateUserInfo = (user, userData) => {
             state.currentUser = { ...user, ...userData };
-            
             const initials = userData.fullName?.split(' ').map(n => n[0]).join('').toUpperCase() || '...';
             dom.userAvatar.textContent = initials;
             dom.userFullname.textContent = userData.fullName || 'User';
@@ -830,36 +1071,26 @@
             if (user) {
                 await user.reload();
                 const refreshedUser = auth.currentUser;
-
                 if (refreshedUser.emailVerified) {
                     dom.authContainer.classList.add('hidden');
                     dom.verifyEmailContainer.classList.add('hidden');
                     dom.mainAppContainer.classList.remove('hidden');
                     dom.registerModal.classList.add('hidden');
-
                     const userDocRef = doc(db, "users", refreshedUser.uid);
                     const userDocSnap = await getDoc(userDocRef);
-
-                    if (userDocSnap.exists()) {
-                        updateUserInfo(refreshedUser, userDocSnap.data());
-                    } else {
-                        console.warn("User data not found in Firestore for UID:", refreshedUser.uid);
-                        updateUserInfo(refreshedUser, { fullName: "New User", email: refreshedUser.email });
-                    }
+                    if (userDocSnap.exists()) { updateUserInfo(refreshedUser, userDocSnap.data()); } 
+                    else { console.warn("User data not found in Firestore for UID:", refreshedUser.uid); updateUserInfo(refreshedUser, { fullName: "New User", email: refreshedUser.email }); }
                     updateLanguage();
+                    initPaperTrading(); // Initialize Paper Trading on successful login
                     switchSection('charts');
                 } else {
-                    dom.authContainer.classList.add('hidden');
-                    dom.mainAppContainer.classList.add('hidden');
-                    dom.registerModal.classList.add('hidden');
-                    dom.verifyEmailContainer.classList.remove('hidden');
+                    dom.authContainer.classList.add('hidden'); dom.mainAppContainer.classList.add('hidden');
+                    dom.registerModal.classList.add('hidden'); dom.verifyEmailContainer.classList.remove('hidden');
                     dom.verificationEmailSpan.textContent = refreshedUser.email;
                 }
             } else {
-                dom.authContainer.classList.remove('hidden');
-                dom.mainAppContainer.classList.add('hidden');
-                dom.verifyEmailContainer.classList.add('hidden');
-                state.currentUser = null;
+                dom.authContainer.classList.remove('hidden'); dom.mainAppContainer.classList.add('hidden');
+                dom.verifyEmailContainer.classList.add('hidden'); state.currentUser = null;
                 showView('login');
             }
         });
@@ -867,109 +1098,85 @@
         // --- Event Listeners ---
         const setupEventListeners = () => {
             dom.themeToggles.forEach(toggle => toggle.addEventListener('change', toggleTheme));
-            dom.navItems.forEach(item => item.addEventListener('click', (e) => {
-                e.preventDefault();
-                switchSection(item.dataset.section)
-            }));
-            dom.symbolSearchInput.addEventListener('keydown', handleSymbolSearch);
-            dom.langSwitcher.addEventListener('click', (e) => {
-                 e.stopPropagation();
-                 dom.langDropdown.classList.toggle('hidden');
-            });
-            document.addEventListener('click', (e) => {
-                if (!dom.langSwitcher.contains(e.target)) dom.langDropdown.classList.add('hidden');
-            });
+            dom.navItems.forEach(item => item.addEventListener('click', (e) => { e.preventDefault(); switchSection(item.dataset.section) }));
+            dom.langSwitcher.addEventListener('click', (e) => { e.stopPropagation(); dom.langDropdown.classList.toggle('hidden'); });
+            document.addEventListener('click', (e) => { if (!dom.langSwitcher.contains(e.target)) dom.langDropdown.classList.add('hidden'); });
 
+            // Auth links
             document.getElementById('show-register-link').addEventListener('click', (e) => { e.preventDefault(); showView('register'); });
             document.getElementById('close-register-modal').addEventListener('click', () => dom.registerModal.classList.add('hidden'));
             document.getElementById('forgot-password-link').addEventListener('click', (e) => { e.preventDefault(); showView('forgot-password'); });
             document.getElementById('back-to-login-link').addEventListener('click', (e) => { e.preventDefault(); showView('login'); });
-
+            
+            // Auth forms
             dom.loginForm.addEventListener('submit', handleLogin);
             dom.forgotPasswordForm.addEventListener('submit', handlePasswordReset);
             
+            // Logout buttons
             document.getElementById('logout-button').addEventListener('click', handleLogout);
             document.getElementById('mobile-logout-button').addEventListener('click', handleLogout);
-            dom.logoutFromVerifyButton.addEventListener('click', (e) => {
-                e.preventDefault();
-                signOut(auth);
-            });
+            dom.logoutFromVerifyButton.addEventListener('click', (e) => { e.preventDefault(); signOut(auth); });
 
+            // Verification screen buttons
             dom.resendVerificationButton.addEventListener('click', async () => {
-                const button = dom.resendVerificationButton;
-                button.disabled = true;
-                dom.resendStatus.textContent = '';
-                
-                try {
-                    await sendEmailVerification(auth.currentUser);
-                    dom.resendStatus.textContent = 'Verification email sent!';
-                } catch (error) {
-                    dom.resendStatus.textContent = 'Error sending email. Please try again later.';
-                    console.error("Error resending verification email:", error);
-                } finally {
-                    setTimeout(() => { dom.resendStatus.textContent = ''; }, 5000);
-                    setTimeout(() => { button.disabled = false; }, 30000);
-                }
+                const button = dom.resendVerificationButton; button.disabled = true; dom.resendStatus.textContent = '';
+                try { await sendEmailVerification(auth.currentUser); dom.resendStatus.textContent = 'Verification email sent!'; } 
+                catch (error) { dom.resendStatus.textContent = 'Error sending email. Please try again later.'; console.error("Error resending verification email:", error); } 
+                finally { setTimeout(() => { dom.resendStatus.textContent = ''; }, 5000); setTimeout(() => { button.disabled = false; }, 30000); }
             });
-
             dom.checkVerificationButton.addEventListener('click', async () => {
-                if(auth.currentUser) {
-                    await auth.currentUser.reload();
-                    if(!auth.currentUser.emailVerified) {
-                        dom.resendStatus.textContent = 'Email not yet verified. Please check your inbox.';
-                        setTimeout(() => { dom.resendStatus.textContent = ''; }, 5000);
-                    }
-                }
+                if(auth.currentUser) { await auth.currentUser.reload(); if(!auth.currentUser.emailVerified) { dom.resendStatus.textContent = 'Email not yet verified. Please check your inbox.'; setTimeout(() => { dom.resendStatus.textContent = ''; }, 5000); } }
             });
 
+            // Registration step forms
             dom.registerForms.step1.addEventListener('submit', (e) => {
-                e.preventDefault();
-                dom.registerErrors.step1.textContent = '';
+                e.preventDefault(); dom.registerErrors.step1.textContent = '';
                 const password = e.target.elements['register-password'].value;
                 const confirm = e.target.elements['register-confirm-password'].value;
-
-                if (password.length < 6) {
-                    dom.registerErrors.step1.textContent = getTranslatedText('error_weak_password');
-                    return;
-                }
-                if (password !== confirm) {
-                    dom.registerErrors.step1.textContent = getTranslatedText('error_password_mismatch');
-                    return;
-                }
+                if (password.length < 6) { dom.registerErrors.step1.textContent = getTranslatedText('error_weak_password'); return; }
+                if (password !== confirm) { dom.registerErrors.step1.textContent = getTranslatedText('error_password_mismatch'); return; }
                 state.registrationData.email = e.target.elements['register-email'].value;
-                state.registrationData.password = password;
-                switchRegisterStep(2);
+                state.registrationData.password = password; switchRegisterStep(2);
             });
-
             dom.registerForms.step2.addEventListener('submit', (e) => {
-                e.preventDefault();
-                dom.registerErrors.step2.textContent = '';
+                e.preventDefault(); dom.registerErrors.step2.textContent = '';
                 const fullName = e.target.elements['register-fullname'].value;
                 const username = e.target.elements['register-username'].value;
-                if (!fullName || !username) {
-                    dom.registerErrors.step2.textContent = 'Please fill out all fields.';
-                    return;
-                }
-                state.registrationData.fullName = fullName;
-                state.registrationData.username = username;
-                switchRegisterStep(3);
+                if (!fullName || !username) { dom.registerErrors.step2.textContent = 'Please fill out all fields.'; return; }
+                state.registrationData.fullName = fullName; state.registrationData.username = username; switchRegisterStep(3);
             });
-            
-            document.getElementById('register-back-step1').addEventListener('click', () => switchRegisterStep(1));
-            
             dom.registerForms.step3.addEventListener('submit', (e) => {
-                e.preventDefault();
-                dom.registerErrors.step3.textContent = '';
+                e.preventDefault(); dom.registerErrors.step3.textContent = '';
                 const terms = e.target.elements['terms-agree'].checked;
                 const age = e.target.elements['age-confirm'].checked;
-                if (!terms || !age) {
-                    dom.registerErrors.step3.textContent = 'You must accept the terms and confirm your age.';
-                    return;
-                }
+                if (!terms || !age) { dom.registerErrors.step3.textContent = 'You must accept the terms and confirm your age.'; return; }
                 handleRegistration();
             });
-
+            document.getElementById('register-back-step1').addEventListener('click', () => switchRegisterStep(1));
             document.getElementById('register-back-step2').addEventListener('click', () => switchRegisterStep(2));
+            
+            // Paper Trading Event Listeners
+            dom.paper.symbolInput.addEventListener('change', changeSymbol);
+            dom.paper.buyButton.addEventListener('click', () => placeOrder('buy'));
+            dom.paper.sellButton.addEventListener('click', () => placeOrder('sell'));
+            
+            // Chart Section Tabs
+            dom.chartTabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const tabId = btn.dataset.tab;
+                    // Update button styles
+                    dom.chartTabBtns.forEach(b => {
+                        b.classList.remove('accent-text', 'border-b-2', 'accent-border');
+                        b.classList.add('text-secondary', 'border-transparent');
+                    });
+                    btn.classList.add('accent-text', 'border-b-2', 'accent-border');
+                    btn.classList.remove('text-secondary', 'border-transparent');
+                    // Update content visibility
+                    dom.chartsTabContents.forEach(content => {
+                        content.classList.toggle('active', content.id === `${tabId}-tab-content`);
+                    });
+                });
+            });
         };
 
         // --- App Initialization ---
@@ -977,14 +1184,20 @@
             const savedTheme = localStorage.getItem('theme');
             state.isDarkMode = savedTheme === 'dark' || savedTheme === null;
             applyTheme();
+            
+            const savedLang = localStorage.getItem('language');
+            state.currentLang = ['en', 'bg'].includes(savedLang) ? savedLang : 'en';
 
             populateLanguageDropdown();
-            updateLanguage(); 
             setupEventListeners();
+            updateLanguage();
+
+            // Set default active tabs
+            document.querySelector('.chart-tab-btn[data-tab="chart"]').click();
+            document.querySelector('.nav-item[data-section="charts"]').click();
         };
 
         document.addEventListener('DOMContentLoaded', init);
-
     </script>
 </body>
 </html>
