@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8" />
@@ -83,6 +82,20 @@
         .status-connecting { background-color: #f39c12; color: #1e222d; }
         .status-connected { background-color: var(--buy-color); color: white; }
         .status-disconnected { background-color: var(--sell-color); color: white; }
+
+        /* Styles for Chatbot Messages */
+        #chatbot-box .user-message {
+            background-color: var(--accent-color);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+        #chatbot-box .bot-message {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
 
     </style>
 </head>
@@ -223,7 +236,6 @@
         </div>
     </div>
 
-
     <div id="main-app-container" class="hidden h-screen w-screen flex flex-col md:flex-row">
         <nav id="desktop-nav" class="hidden md:flex flex-col w-64 bg-secondary border-r border-custom p-4 space-y-2">
             <div class="px-4 py-2 mb-4">
@@ -231,6 +243,9 @@
             </div>
             <a href="#" class="nav-item flex items-center space-x-3 px-4 py-3 rounded-lg text-primary hover:bg-tertiary" data-section="charts">
                 <i class="fas fa-chart-pie w-6 text-center"></i><span data-i18n-key="nav_charts">Charts</span>
+            </a>
+            <a href="#" class="nav-item flex items-center space-x-3 px-4 py-3 rounded-lg text-secondary hover:bg-tertiary" data-section="assistant">
+                <i class="fas fa-robot w-6 text-center"></i><span data-i18n-key="nav_assistant">Асистент</span>
             </a>
             <a href="#" class="nav-item flex items-center space-x-3 px-4 py-3 rounded-lg text-secondary hover:bg-tertiary" data-section="news">
                 <i class="fas fa-newspaper w-6 text-center"></i><span data-i18n-key="nav_news">News</span>
@@ -358,42 +373,44 @@
                                 <div id="leaderboard-tab-content" class="charts-tab-content bg-secondary rounded-xl shadow-md p-6">
                                     <h3 class="text-xl font-bold text-primary mb-4" data-i18n-key="leaderboard_title">Leaderboard (All Time Profit %)</h3>
                                     <p class="text-sm text-secondary mb-4" data-i18n-key="leaderboard_note">Note: This is a demo leaderboard. A live version requires backend integration.</p>
-                                    <table class="w-full text-sm text-left text-secondary">
-                                        <thead class="text-xs text-primary uppercase bg-tertiary">
-                                            <tr>
-                                                <th scope="col" class="px-4 py-3" data-i18n-key="leaderboard_rank">Rank</th>
-                                                <th scope="col" class="px-4 py-3" data-i18n-key="leaderboard_user">User</th>
-                                                <th scope="col" class="px-4 py-3 text-right" data-i18n-key="leaderboard_profit">Profit %</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr class="border-b border-custom">
-                                                <td class="px-4 py-3 font-medium text-primary">1. 🥇</td>
-                                                <td class="px-4 py-3 font-medium text-primary">CryptoKing</td>
-                                                <td class="px-4 py-3 text-right font-bold buy-text">+1245.5%</td>
-                                            </tr>
-                                            <tr class="border-b border-custom">
-                                                <td class="px-4 py-3 font-medium text-primary">2. 🥈</td>
-                                                <td class="px-4 py-3 font-medium text-primary">ScalperPro</td>
-                                                <td class="px-4 py-3 text-right font-bold buy-text">+987.2%</td>
-                                            </tr>
-                                             <tr class="border-b border-custom">
-                                                <td class="px-4 py-3 font-medium text-primary">3. 🥉</td>
-                                                <td class="px-4 py-3 font-medium text-primary">DiamondHands</td>
-                                                <td class="px-4 py-3 text-right font-bold buy-text">+602.8%</td>
-                                            </tr>
-                                            <tr class="border-b border-custom">
-                                                <td class="px-4 py-3">4.</td>
-                                                <td class="px-4 py-3">FutureSight</td>
-                                                <td class="px-4 py-3 text-right buy-text">+455.1%</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="px-4 py-3">5.</td>
-                                                <td class="px-4 py-3">MoonTrader</td>
-                                                <td class="px-4 py-3 text-right sell-text">-15.3%</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                    <div class="overflow-x-auto">
+                                        <table class="w-full text-sm text-left text-secondary">
+                                            <thead class="text-xs text-primary uppercase bg-tertiary">
+                                                <tr>
+                                                    <th scope="col" class="px-4 py-3" data-i18n-key="leaderboard_rank">Rank</th>
+                                                    <th scope="col" class="px-4 py-3" data-i18n-key="leaderboard_user">User</th>
+                                                    <th scope="col" class="px-4 py-3 text-right" data-i18n-key="leaderboard_profit">Profit %</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="border-b border-custom">
+                                                    <td class="px-4 py-3 font-medium text-primary">1. 🥇</td>
+                                                    <td class="px-4 py-3 font-medium text-primary">CryptoKing</td>
+                                                    <td class="px-4 py-3 text-right font-bold buy-text">+1245.5%</td>
+                                                </tr>
+                                                <tr class="border-b border-custom">
+                                                    <td class="px-4 py-3 font-medium text-primary">2. 🥈</td>
+                                                    <td class="px-4 py-3 font-medium text-primary">ScalperPro</td>
+                                                    <td class="px-4 py-3 text-right font-bold buy-text">+987.2%</td>
+                                                </tr>
+                                                 <tr class="border-b border-custom">
+                                                    <td class="px-4 py-3 font-medium text-primary">3. 🥉</td>
+                                                    <td class="px-4 py-3 font-medium text-primary">DiamondHands</td>
+                                                    <td class="px-4 py-3 text-right font-bold buy-text">+602.8%</td>
+                                                </tr>
+                                                <tr class="border-b border-custom">
+                                                    <td class="px-4 py-3">4.</td>
+                                                    <td class="px-4 py-3">FutureSight</td>
+                                                    <td class="px-4 py-3 text-right buy-text">+455.1%</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-4 py-3">5.</td>
+                                                    <td class="px-4 py-3">MoonTrader</td>
+                                                    <td class="px-4 py-3 text-right sell-text">-15.3%</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                                 <div id="winnings-tab-content" class="charts-tab-content">
                                      <div class="text-center p-12 bg-secondary rounded-xl">
@@ -430,7 +447,7 @@
                                         </tr>
                                     </thead>
                                     <tbody id="open-positions-table">
-                                        </tbody>
+                                    </tbody>
                                 </table>
                             </div>
 
@@ -450,7 +467,7 @@
                                         </tr>
                                     </thead>
                                     <tbody id="closed-orders-table">
-                                        </tbody>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -491,14 +508,14 @@
                 <a href="#" class="nav-item flex flex-col items-center justify-center p-2 rounded-lg text-primary" data-section="charts">
                     <i class="fas fa-chart-pie text-xl"></i><span class="text-xs mt-1" data-i18n-key="nav_charts">Charts</span>
                 </a>
+                 <a href="#" class="nav-item flex flex-col items-center justify-center p-2 rounded-lg text-secondary" data-section="assistant">
+                    <i class="fas fa-robot text-xl"></i><span class="text-xs mt-1" data-i18n-key="nav_assistant">Асистент</span>
+                </a>
                 <a href="#" class="nav-item flex flex-col items-center justify-center p-2 rounded-lg text-secondary" data-section="news">
                     <i class="fas fa-newspaper text-xl"></i><span class="text-xs mt-1" data-i18n-key="nav_news">News</span>
                 </a>
                 <a href="#" class="nav-item flex flex-col items-center justify-center p-2 rounded-lg text-secondary" data-section="education">
                     <i class="fas fa-book text-xl"></i><span class="text-xs mt-1" data-i18n-key="nav_education">Education</span>
-                </a>
-                <a href="#" class="nav-item flex flex-col items-center justify-center p-2 rounded-lg text-secondary" data-section="portfolio">
-                    <i class="fas fa-wallet text-xl"></i><span class="text-xs mt-1" data-i18n-key="nav_portfolio">Portfolio</span>
                 </a>
                 <a href="#" class="nav-item flex flex-col items-center justify-center p-2 rounded-lg text-secondary" data-section="api">
                     <i class="fas fa-code text-xl"></i><span class="text-xs mt-1" data-i18n-key="nav_api">API</span>
@@ -506,6 +523,30 @@
             </nav>
         </main>
     </div>
+
+    <button id="chatbot-fab" class="hidden fixed bottom-5 right-5 md:bottom-8 md:right-8 z-50 accent-bg text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-2xl">
+        <i class="fas fa-robot"></i>
+    </button>
+    
+    <div id="chatbot-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 p-0 md:p-4">
+        <div id="chatbot-container" class="bg-secondary w-full h-full md:w-[450px] md:h-[70vh] md:max-h-[700px] rounded-none md:rounded-2xl shadow-xl flex flex-col overflow-hidden">
+            <div id="chatbot-header" class="flex items-center justify-between p-4 border-b border-custom">
+                <h3 class="font-bold text-primary text-lg" data-i18n-key="chatbot_title">Вашият Асистент</h3>
+                <button id="chatbot-close-btn" class="text-secondary hover:text-primary text-2xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="chatbot-box" class="flex-grow p-5 overflow-y-auto flex flex-col gap-4">
+                </div>
+            <div id="chatbot-input-area" class="p-4 border-t border-custom flex items-center gap-3">
+                <input type="text" id="chatbot-input" data-i18n-key-placeholder="chatbot_placeholder" placeholder="Напишете съобщение..." class="w-full bg-tertiary border-transparent rounded-full px-4 py-2 text-primary focus:outline-none focus:ring-2 accent-border">
+                <button id="chatbot-send-btn" class="accent-bg text-white rounded-full w-10 h-10 flex-shrink-0 flex items-center justify-center text-xl hover:opacity-90 disabled:opacity-50">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
 
     <script type="module">
         // IMPORTANT: These imports are for modern browsers and bundlers
@@ -539,7 +580,6 @@
             currentUser: null,
             currentSection: 'charts',
             registrationData: {},
-            // Paper Trading State
             paperTrade: {
                 accountBalance: 10000,
                 openPositions: [],
@@ -548,6 +588,13 @@
                 currentSymbol: "BTCUSDT",
                 priceSocket: null,
                 isInitialized: false
+            },
+            chatbot: {
+                apiKey: 'AIzaSyAgJGFbXqIVINlUYrLF73q8KB31dQdIQ1k',
+                systemPrompt: `Ти си "Асистента" - приятелски и полезен чатбот на уебсайт. Отговаряй кратко, ясно и на български език. Не използвай markdown форматиране. Помагай на потребителите с информация за продукти и услуги.`,
+                apiUrl: '',
+                conversationHistory: [],
+                isInitialized: false,
             }
         };
 
@@ -616,6 +663,16 @@
                 sellButton: document.getElementById('sell-button'),
                 openPositionsTable: document.getElementById('open-positions-table'),
                 closedOrdersTable: document.getElementById('closed-orders-table'),
+            },
+            
+            // Chatbot Elements
+            chatbot: {
+                fab: document.getElementById('chatbot-fab'),
+                modal: document.getElementById('chatbot-modal'),
+                closeButton: document.getElementById('chatbot-close-btn'),
+                chatBox: document.getElementById('chatbot-box'),
+                input: document.getElementById('chatbot-input'),
+                sendButton: document.getElementById('chatbot-send-btn'),
             }
         };
 
@@ -630,31 +687,29 @@
                 register_step2_subtitle: "Required for account verification.", fullname_label: "Full Name", username_label: "Username", back_button: "Back",
                 register_step3_title: "Final Step (Step 3/3)", register_step3_subtitle: "Please review and accept our terms.", agree_to_terms_prompt: "I agree to the",
                 age_confirm_prompt: "I confirm I am 18 years of age or older.", create_account_button: "Create Account", nav_charts: "Charts", nav_news: "News",
-                nav_education: "Education", nav_portfolio: "Portfolio", nav_api: "API", section_title_news: "Market News",
+                nav_education: "Education", nav_portfolio: "Portfolio", nav_api: "API", nav_assistant: "Assistant", section_title_news: "Market News",
                 section_title_education: "Education", education_placeholder: "Educational content coming soon.", section_title_portfolio: "My Portfolio",
                 portfolio_placeholder: "Portfolio tracking coming soon.", section_title_api: "API Access", api_placeholder: "API documentation and keys will be available here.",
                 verify_email_title: "Verify Your Email", verify_email_instructions_part1: "A verification link has been sent to",
                 verify_email_instructions_part2: ". Please check your inbox and click the link to activate your account.", resend_email_button: "Resend Verification Email",
                 check_verification_button: "I've Verified, Continue", wrong_account_prompt: "Wrong account?", logout_button: "Logout",
-                // Paper Trading
                 paper_balance_title: "Available Balance", paper_trade_panel_title: "Trade Panel", paper_symbol: "Trading Symbol (e.g., BTCUSDT)", paper_leverage: "Leverage",
                 paper_amount: "Amount (USDT)", paper_tp: "Take Profit (Price)", paper_sl: "Stop Loss (Price)", paper_optional: "Optional", paper_buy_long: "BUY / LONG",
                 paper_sell_short: "SELL / SHORT", paper_open_positions: "Open Positions", paper_trade_history: "Trade History",
                 tbl_symbol: "Symbol", tbl_type: "Type", tbl_margin: "Margin (USDT)", tbl_leverage: "Leverage", tbl_entry: "Entry Price", tbl_current: "Current Price",
                 tbl_liq: "Liq. Price", tbl_tp: "Take Profit", tbl_sl: "Stop Loss", tbl_pnl: "P/L (USDT)", tbl_action: "Action",
                 tbl_hist_id: "ID", tbl_exit: "Exit Price", tbl_reason: "Reason",
-                // New Tabs
                 tab_chart: "Chart", tab_leaderboard: "Leaderboard", tab_winnings: "Winnings", tab_bonuses: "Bonuses",
                 leaderboard_title: "Leaderboard (All Time Profit %)", leaderboard_note: "Note: This is a demo leaderboard. A live version requires backend integration.",
                 leaderboard_rank: "Rank", leaderboard_user: "User", leaderboard_profit: "Profit %",
                 winnings_placeholder: "Winnings section coming soon.", bonuses_placeholder: "Bonuses section coming soon.",
-                // Error messages
                 error_password_mismatch: "Passwords do not match. Please re-enter.", error_email_in_use: "This email is already registered. Please log in or use a different one.",
                 error_weak_password: "Password is too weak. It must be at least 6 characters long.", error_invalid_email: "The email address is not valid.",
                 error_generic_register: "An unexpected error occurred. Please try again.", error_wrong_password: "Incorrect password. Please try again.",
                 error_user_not_found: "No account found with this email. Please register.", error_generic_login: "Login failed. Please check your credentials and try again.",
                 paper_alert_invalid_amount: "Please enter a valid amount (margin).", paper_alert_insufficient_balance: "Insufficient balance. Your available balance is less than the requested margin.",
-                paper_alert_no_price: "Waiting for real-time price before opening a position."
+                paper_alert_no_price: "Waiting for real-time price before opening a position.",
+                chatbot_title: "Your Assistant", chatbot_placeholder: "Write a message...",
             },
             bg: {
                 login_welcome_title: "Добре дошли в OpenTrading", login_welcome_subtitle: "Влезте, за да достъпите портфолиото си.", email_label: "Имейл", password_label: "Парола", login_button: "Вход",
@@ -665,33 +720,130 @@
                 register_step2_subtitle: "Нужни за верификация на акаунта.", fullname_label: "Пълно име", username_label: "Потребителско име", back_button: "Назад",
                 register_step3_title: "Финална стъпка (Стъпка 3/3)", register_step3_subtitle: "Моля, прегледайте и приемете условията.", agree_to_terms_prompt: "Съгласен съм с",
                 age_confirm_prompt: "Потвърждавам, че имам навършени 18 години.", create_account_button: "Създай акаунт", nav_charts: "Графики", nav_news: "Новини",
-                nav_education: "Обучение", nav_portfolio: "Портфолио", nav_api: "API", section_title_news: "Пазарни новини",
+                nav_education: "Обучение", nav_portfolio: "Портфолио", nav_api: "API", nav_assistant: "Асистент", section_title_news: "Пазарни новини",
                 section_title_education: "Обучение", education_placeholder: "Образователно съдържание очаквайте скоро.", section_title_portfolio: "Моето портфолио",
                 portfolio_placeholder: "Проследяване на портфолио очаквайте скоро.", section_title_api: "API Достъп", api_placeholder: "API документация и ключове ще бъдат достъпни тук.",
                 verify_email_title: "Потвърдете имейла си", verify_email_instructions_part1: "Изпратен е линк за потвърждение на",
                 verify_email_instructions_part2: ". Моля, проверете пощата си и кликнете на линка, за да активирате акаунта си.", resend_email_button: "Изпрати отново",
                 check_verification_button: "Потвърдих, Продължи", wrong_account_prompt: "Грешен акаунт?", logout_button: "Изход",
-                // Paper Trading
                 paper_balance_title: "Наличен Баланс", paper_trade_panel_title: "Панел за търговия", paper_symbol: "Търговски символ (напр. BTCUSDT)", paper_leverage: "Ливъридж",
                 paper_amount: "Количество (USDT)", paper_tp: "Take Profit (Цена)", paper_sl: "Stop Loss (Цена)", paper_optional: "Опционално", paper_buy_long: "КУПИ / ДЪЛГА",
                 paper_sell_short: "ПРОДАЙ / КЪСА", paper_open_positions: "Отворени Позиции", paper_trade_history: "История на сделките",
                 tbl_symbol: "Символ", tbl_type: "Тип", tbl_margin: "Маржин (USDT)", tbl_leverage: "Ливъридж", tbl_entry: "Входна Цена", tbl_current: "Текуща Цена",
                 tbl_liq: "Цена на Ликв.", tbl_tp: "Take Profit", tbl_sl: "Stop Loss", tbl_pnl: "P/L (USDT)", tbl_action: "Действие",
                 tbl_hist_id: "ID", tbl_exit: "Изходна Цена", tbl_reason: "Причина",
-                // New Tabs
                 tab_chart: "Графика", tab_leaderboard: "Класиране", tab_winnings: "Winnings", tab_bonuses: "Бонуси",
                 leaderboard_title: "Класация (% обща печалба)", leaderboard_note: "Забележка: Това е демо класация. Истинската версия изисква интеграция с база данни.",
                 leaderboard_rank: "Място", leaderboard_user: "Потребител", leaderboard_profit: "% Печалба",
                 winnings_placeholder: "Секция 'Winnings' очаквайте скоро.", bonuses_placeholder: "Секция 'Бонуси' очаквайте скоро.",
-                // Error messages
                 error_password_mismatch: "Паролите не съвпадат. Моля, въведете ги отново.", error_email_in_use: "Този имейл вече е регистриран. Моля, влезте в системата или използвайте друг.",
                 error_weak_password: "Паролата е твърде слаба. Трябва да е поне 6 символа.", error_invalid_email: "Имейл адресът не е валиден.",
                 error_generic_register: "Възникна неочаквана грешка. Моля, опитайте отново.", error_wrong_password: "Грешна парола. Моля, опитайте отново.",
                 error_user_not_found: "Няма акаунт с този имейл. Моля, регистрирайте се.", error_generic_login: "Грешка при вход. Проверете данните си и опитайте отново.",
                 paper_alert_invalid_amount: "Моля, въведете валидно количество (маржин).", paper_alert_insufficient_balance: "Недостатъчен баланс. Вашият наличен баланс е по-малък от заявения маржин.",
-                paper_alert_no_price: "Изчакайте получаването на цена в реално време преди да отворите позиция."
+                paper_alert_no_price: "Изчакайте получаването на цена в реално време преди да отворите позиция.",
+                chatbot_title: "Вашият Асистент", chatbot_placeholder: "Напишете съобщение...",
             }
         };
+
+        // --- Chatbot Logic ---
+        function initChatbot() {
+            if (state.chatbot.isInitialized) return;
+            state.chatbot.apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${state.chatbot.apiKey}`;
+            if (state.chatbot.systemPrompt) {
+                state.chatbot.conversationHistory.push({ role: 'user', parts: [{ text: state.chatbot.systemPrompt }] });
+                state.chatbot.conversationHistory.push({ role: 'model', parts: [{ text: 'Разбрано. Готов съм да помагам!' }] });
+            }
+            addMessageToChatBox('Здравейте! С какво мога да ви помогна днес?', 'bot');
+            state.chatbot.isInitialized = true;
+        }
+
+        function openChatbot() {
+            dom.chatbot.modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling background
+            initChatbot();
+        }
+
+        function closeChatbot() {
+            dom.chatbot.modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        function addMessageToChatBox(message, sender) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', `${sender}-message`, 'px-4', 'py-2', 'rounded-2xl', 'max-w-[80%]', 'leading-normal');
+            messageElement.textContent = message;
+            dom.chatbot.chatBox.appendChild(messageElement);
+            dom.chatbot.chatBox.scrollTop = dom.chatbot.chatBox.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const typingElement = document.createElement('div');
+            typingElement.id = 'typing-indicator';
+            typingElement.classList.add('message', 'bot-message', 'px-4', 'py-2', 'rounded-2xl', 'max-w-[80%]');
+            typingElement.innerHTML = `<div class="flex items-center space-x-1"><div class="w-2 h-2 bg-gray-400 rounded-full animate-pulse"></div><div class="w-2 h-2 bg-gray-400 rounded-full animate-pulse [animation-delay:0.2s]"></div><div class="w-2 h-2 bg-gray-400 rounded-full animate-pulse [animation-delay:0.4s]"></div></div>`;
+            dom.chatbot.chatBox.appendChild(typingElement);
+            dom.chatbot.chatBox.scrollTop = dom.chatbot.chatBox.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const typingElement = document.getElementById('typing-indicator');
+            if (typingElement) {
+                dom.chatbot.chatBox.removeChild(typingElement);
+            }
+        }
+        
+        function toggleChatUI(enabled) {
+            dom.chatbot.input.disabled = !enabled;
+            dom.chatbot.sendButton.disabled = !enabled;
+            if (enabled) {
+                dom.chatbot.input.focus();
+            }
+        }
+
+        async function sendChatMessage() {
+            const messageText = dom.chatbot.input.value.trim();
+            if (!messageText) return;
+
+            addMessageToChatBox(messageText, 'user');
+            dom.chatbot.input.value = '';
+            toggleChatUI(false);
+            showTypingIndicator();
+
+            state.chatbot.conversationHistory.push({ role: 'user', parts: [{ text: messageText }] });
+            
+            try {
+                const response = await fetch(state.chatbot.apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: state.chatbot.conversationHistory })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error.message || 'Възникна грешка при комуникацията с API.');
+                }
+
+                const data = await response.json();
+                removeTypingIndicator();
+
+                if (data.candidates && data.candidates.length > 0 && data.candidates[0].content.parts[0].text) {
+                    const botResponse = data.candidates[0].content.parts[0].text;
+                    addMessageToChatBox(botResponse, 'bot');
+                    state.chatbot.conversationHistory.push({ role: 'model', parts: [{ text: botResponse }] });
+                } else {
+                     addMessageToChatBox('Не получих валиден отговор. Моля, опитайте отново.', 'bot');
+                }
+
+            } catch (error) {
+                console.error('Chatbot API Error:', error);
+                removeTypingIndicator();
+                addMessageToChatBox(`Грешка: ${error.message}`, 'bot');
+            } finally {
+                 toggleChatUI(true);
+            }
+        }
+
 
         const availableLanguages = { en: 'English', bg: 'Български' };
         
@@ -714,7 +866,6 @@
             if (state.currentUser && state.currentUser.emailVerified) {
                 createTradingViewWidget('TVC:SPX', lang);
                 createNewsWidget(lang);
-                // Force UI update for paper trader to reflect language change in tables
                 if(state.paperTrade.isInitialized) updatePaperTradeUI(); 
             }
         };
@@ -738,7 +889,6 @@
             }
         };
 
-        // --- Theme Management ---
         const toggleTheme = (e) => {
             state.isDarkMode = !e.target.checked;
             localStorage.setItem('theme', state.isDarkMode ? 'dark' : 'light');
@@ -755,7 +905,6 @@
             dom.themeToggles.forEach(toggle => toggle.checked = !state.isDarkMode);
         };
 
-        // --- UI & View Management ---
         const switchSection = (sectionId) => {
             state.currentSection = sectionId;
             dom.appSections.forEach(section => section.classList.toggle('hidden', section.id !== `${sectionId}-section`));
@@ -784,7 +933,6 @@
             document.getElementById(`register-step-${step}`).classList.add('active');
         };
 
-        // --- TradingView Widgets ---
         const createTradingViewWidget = (symbol, lang) => {
             const container = document.getElementById('tradingview-widget-container');
             if(!container || !document.body.contains(container)) return;
@@ -802,28 +950,20 @@
             const container = document.getElementById('tradingview-news-widget-container');
             if (!container || !document.body.contains(container)) return;
             
-            container.innerHTML = ''; // Clear previous widget
-
+            container.innerHTML = ''; 
             const script = document.createElement('script');
             script.type = 'text/javascript';
             script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-timeline.js';
             script.async = true;
 
             const config = {
-                "feedMode": "all_symbols",
-                "isTransparent": false,
-                "displayMode": "regular",
-                "width": "100%",
-                "height": "100%",
-                "colorTheme": state.isDarkMode ? "dark" : "light",
-                "locale": lang
+                "feedMode": "all_symbols", "isTransparent": false, "displayMode": "regular",
+                "width": "100%", "height": "100%", "colorTheme": state.isDarkMode ? "dark" : "light", "locale": lang
             };
             script.innerHTML = JSON.stringify(config, null, 2);
-
             container.appendChild(script);
         };
         
-        // --- Paper Trading Logic ---
         function initPaperTrading() {
             if (state.paperTrade.isInitialized) return;
             loadPaperTradeState();
@@ -999,7 +1139,7 @@
 
             const closedOrdersBody = dom.paper.closedOrdersTable;
             closedOrdersBody.innerHTML = '';
-            state.paperTrade.closedOrders.slice(0, 50).forEach(o => { // Limit history to 50
+            state.paperTrade.closedOrders.slice(0, 50).forEach(o => {
                 const pnlClass = o.pnl >= 0 ? 'buy-text' : 'sell-text';
                  const typeClass = o.type === 'buy' ? 'buy-text' : 'sell-text';
                 const row = `
@@ -1015,14 +1155,12 @@
                     </tr>`;
                 closedOrdersBody.innerHTML += row;
             });
-            // Re-add event listeners for close buttons
             document.querySelectorAll('.close-position-btn').forEach(btn => {
                 btn.onclick = () => closePosition(parseInt(btn.dataset.id));
             });
         }
 
 
-        // --- Authentication Logic ---
         const handleLogin = async (e) => {
             e.preventDefault();
             const email = e.target.elements['login-email'].value;
@@ -1086,6 +1224,7 @@
             if (user) {
                 await user.reload();
                 const refreshedUser = auth.currentUser;
+                dom.chatbot.fab.classList.remove('hidden'); // Show chatbot FAB when logged in
                 if (refreshedUser.emailVerified) {
                     dom.authContainer.classList.add('hidden');
                     dom.verifyEmailContainer.classList.add('hidden');
@@ -1096,7 +1235,7 @@
                     if (userDocSnap.exists()) { updateUserInfo(refreshedUser, userDocSnap.data()); } 
                     else { console.warn("User data not found in Firestore for UID:", refreshedUser.uid); updateUserInfo(refreshedUser, { fullName: "New User", email: refreshedUser.email }); }
                     updateLanguage();
-                    initPaperTrading(); // Initialize Paper Trading on successful login
+                    initPaperTrading();
                     switchSection('charts');
                 } else {
                     dom.authContainer.classList.add('hidden'); dom.mainAppContainer.classList.add('hidden');
@@ -1106,33 +1245,37 @@
             } else {
                 dom.authContainer.classList.remove('hidden'); dom.mainAppContainer.classList.add('hidden');
                 dom.verifyEmailContainer.classList.add('hidden'); state.currentUser = null;
+                dom.chatbot.fab.classList.add('hidden'); // Hide chatbot FAB when logged out
+                closeChatbot(); // Ensure chatbot is closed on logout
                 showView('login');
             }
         });
 
-        // --- Event Listeners ---
         const setupEventListeners = () => {
             dom.themeToggles.forEach(toggle => toggle.addEventListener('change', toggleTheme));
-            dom.navItems.forEach(item => item.addEventListener('click', (e) => { e.preventDefault(); switchSection(item.dataset.section) }));
+            dom.navItems.forEach(item => item.addEventListener('click', (e) => { 
+                e.preventDefault(); 
+                if (item.dataset.section === 'assistant') {
+                    openChatbot();
+                } else {
+                    switchSection(item.dataset.section);
+                }
+            }));
             dom.langSwitcher.addEventListener('click', (e) => { e.stopPropagation(); dom.langDropdown.classList.toggle('hidden'); });
             document.addEventListener('click', (e) => { if (!dom.langSwitcher.contains(e.target)) dom.langDropdown.classList.add('hidden'); });
 
-            // Auth links
             document.getElementById('show-register-link').addEventListener('click', (e) => { e.preventDefault(); showView('register'); });
             document.getElementById('close-register-modal').addEventListener('click', () => dom.registerModal.classList.add('hidden'));
             document.getElementById('forgot-password-link').addEventListener('click', (e) => { e.preventDefault(); showView('forgot-password'); });
             document.getElementById('back-to-login-link').addEventListener('click', (e) => { e.preventDefault(); showView('login'); });
             
-            // Auth forms
             dom.loginForm.addEventListener('submit', handleLogin);
             dom.forgotPasswordForm.addEventListener('submit', handlePasswordReset);
             
-            // Logout buttons
             document.getElementById('logout-button').addEventListener('click', handleLogout);
             document.getElementById('mobile-logout-button').addEventListener('click', handleLogout);
             dom.logoutFromVerifyButton.addEventListener('click', (e) => { e.preventDefault(); signOut(auth); });
 
-            // Verification screen buttons
             dom.resendVerificationButton.addEventListener('click', async () => {
                 const button = dom.resendVerificationButton; button.disabled = true; dom.resendStatus.textContent = '';
                 try { await sendEmailVerification(auth.currentUser); dom.resendStatus.textContent = 'Verification email sent!'; } 
@@ -1143,7 +1286,6 @@
                 if(auth.currentUser) { await auth.currentUser.reload(); if(!auth.currentUser.emailVerified) { dom.resendStatus.textContent = 'Email not yet verified. Please check your inbox.'; setTimeout(() => { dom.resendStatus.textContent = ''; }, 5000); } }
             });
 
-            // Registration step forms
             dom.registerForms.step1.addEventListener('submit', (e) => {
                 e.preventDefault(); dom.registerErrors.step1.textContent = '';
                 const password = e.target.elements['register-password'].value;
@@ -1170,31 +1312,34 @@
             document.getElementById('register-back-step1').addEventListener('click', () => switchRegisterStep(1));
             document.getElementById('register-back-step2').addEventListener('click', () => switchRegisterStep(2));
             
-            // Paper Trading Event Listeners
             dom.paper.symbolInput.addEventListener('change', changeSymbol);
             dom.paper.buyButton.addEventListener('click', () => placeOrder('buy'));
             dom.paper.sellButton.addEventListener('click', () => placeOrder('sell'));
             
-            // Chart Section Tabs
             dom.chartTabBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
                     const tabId = btn.dataset.tab;
-                    // Update button styles
                     dom.chartTabBtns.forEach(b => {
                         b.classList.remove('accent-text', 'border-b-2', 'accent-border');
                         b.classList.add('text-secondary', 'border-transparent');
                     });
                     btn.classList.add('accent-text', 'border-b-2', 'accent-border');
                     btn.classList.remove('text-secondary', 'border-transparent');
-                    // Update content visibility
                     dom.chartsTabContents.forEach(content => {
                         content.classList.toggle('active', content.id === `${tabId}-tab-content`);
                     });
                 });
             });
+
+            // Chatbot Listeners
+            dom.chatbot.fab.addEventListener('click', openChatbot);
+            dom.chatbot.closeButton.addEventListener('click', closeChatbot);
+            dom.chatbot.sendButton.addEventListener('click', sendChatMessage);
+            dom.chatbot.input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') sendChatMessage();
+            });
         };
 
-        // --- App Initialization ---
         const init = () => {
             const savedTheme = localStorage.getItem('theme');
             state.isDarkMode = savedTheme === 'dark' || savedTheme === null;
@@ -1207,7 +1352,6 @@
             setupEventListeners();
             updateLanguage();
 
-            // Set default active tabs
             document.querySelector('.chart-tab-btn[data-tab="chart"]').click();
             document.querySelector('.nav-item[data-section="charts"]').click();
         };
